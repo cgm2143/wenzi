@@ -3,572 +3,914 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WENZI — 많이 만나는 것보다, 잘 맞는 한 사람.</title>
-<meta name="description" content="AI가 가치관, 생활패턴, 대화스타일을 분석하여 오늘 가장 잘 맞는 사람을 추천합니다.">
+<title>WENZI — 오늘, 당신과 가장 잘 맞는 한 사람.</title>
+<meta name="description" content="AI가 당신의 가치관과 생활패턴을 이해하고 오늘 가장 잘 맞는 인연을 추천합니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
-:root{
-  --p:#FF5C74; --p2:#FF3D5A; --p3:#FF8FA3;
-  --p-ll:#FFE4E9; --p-lll:#FFF5F7;
-  --ink:#2D2D2D; --ink-2:#4A4A4A; --ink-3:#6E6E6E; --ink-4:#A0A0A0; --ink-5:#E5E5E5;
-  --bg:#FFFDFB; --white:#fff;
-  --cream:#FFFCFA; --peach:#FFF0EC; --blush:#FFE4E9;
-  --sans:'Noto Sans KR',system-ui,sans-serif;
-  --max:1120px;
-  --ease:cubic-bezier(.22,1,.36,1);
-  --r:16px; --r-sm:10px; --r-lg:24px; --r-xl:32px;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:var(--sans);background:var(--white);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-img{max-width:100%;display:block;}
-a{text-decoration:none;color:inherit;}
-button{font-family:var(--sans);cursor:pointer;}
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────────── */
+:root {
+  --rose:   #FF5C74;
+  --rose-d: #E84560;
+  --rose-l: #FF8FA3;
+  --rose-bg:#FFF5F7;
+  --blush:  #FFE4E9;
 
-/* ── 유틸 ── */
-.con{max-width:var(--max);margin:0 auto;padding:0 28px;}
+  --ink:    #1A1A1A;
+  --ink-2:  #3D3D3D;
+  --ink-3:  #6B6B6B;
+  --ink-4:  #A0A0A0;
+  --ink-5:  #E8E8E8;
 
-/* 버튼 */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:var(--r-sm);font-size:15px;font-weight:600;transition:all .2s var(--ease);cursor:pointer;white-space:nowrap;}
-.btn-xl{padding:16px 32px;font-size:16px;border-radius:var(--r);}
-.btn-lg{padding:13px 26px;}
-.btn-md{padding:10px 20px;font-size:14px;}
-.btn-sm{padding:7px 14px;font-size:13px;}
-.btn-p{background:var(--p);color:#fff;}
-.btn-p:hover{background:var(--p2);transform:translateY(-1px);box-shadow:0 8px 28px rgba(91,23,224,.28);}
-.btn-p:active{transform:translateY(0);}
-.btn-ghost{background:transparent;color:var(--ink-2);border:1.5px solid var(--ink-5);}
-.btn-ghost:hover{background:var(--bg);border-color:var(--ink-4);}
-.btn-white{background:#fff;color:var(--p);border:1.5px solid rgba(255,255,255,.3);}
-.btn-white:hover{background:rgba(255,255,255,.9);}
+  --cream:  #FFFDFB;
+  --warm:   #FFF8F4;
+  --peach:  #FFF0EA;
+  --white:  #FFFFFF;
 
-/* 배지 */
-.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;}
-.badge-p{background:var(--p-ll);color:var(--p);}
-.badge-live{background:rgba(34,197,94,.1);color:#15803D;}
-.live-dot{width:6px;height:6px;border-radius:50%;background:#22C55E;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+  --sans: 'Noto Sans KR', -apple-system, system-ui, sans-serif;
+  --max:  1080px;
+  --ease: cubic-bezier(.22, 1, .36, 1);
 
-/* 섹션 */
-.section{padding:120px 28px;}
-.s-label{font-size:12px;font-weight:700;color:var(--p);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:14px;}
-.s-title{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1.2px;line-height:1.15;margin-bottom:18px;}
-.s-title .g{background:linear-gradient(135deg,var(--p) 0%,var(--p3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.s-desc{font-size:17px;color:var(--ink-3);line-height:1.8;font-weight:300;}
-.s-center{text-align:center;}
-.s-center .s-desc{max-width:520px;margin:0 auto;}
-
-/* fade-up */
-.fu{opacity:0;transform:translateY(30px);transition:all .7s var(--ease);}
-.fu.vis{opacity:1;transform:none;}
-
-/* ================================================================
-   NAV
-================================================================ */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  height:64px;
-  background:rgba(255,253,251,.92);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(0,0,0,.06);
-  transition:box-shadow .3s;
-}
-.nav.scrolled{box-shadow:0 1px 32px rgba(0,0,0,.08);}
-.nav-in{
-  max-width:var(--max);margin:0 auto;padding:0 28px;
-  height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px;
-}
-.nav-logo{display:flex;align-items:center;}
-.nav-logo img{height:16px;width:auto;}
-.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center;}
-.nav-link{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--ink-3);transition:all .15s;}
-.nav-link:hover{color:var(--ink);background:var(--bg);}
-.nav-link.active{color:var(--p);}
-.nav-right{display:flex;align-items:center;gap:10px;}
-.nav-login{font-size:14px;font-weight:500;color:var(--ink-3);padding:8px 14px;border-radius:8px;transition:all .15s;}
-.nav-login:hover{color:var(--ink);}
-.hbg{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px;}
-.hbg span{display:block;width:20px;height:1.5px;background:var(--ink-2);border-radius:2px;transition:all .25s;}
-.mmenu{
-  display:none;position:fixed;inset:64px 0 0;
-  background:#fff;z-index:199;
-  flex-direction:column;padding:20px 24px;gap:4px;
-  border-top:1px solid var(--ink-5);
-}
-.mmenu.open{display:flex;}
-.mm-link{padding:13px 14px;border-radius:10px;font-size:15px;font-weight:500;color:var(--ink-2);transition:all .15s;}
-.mm-link:hover{background:var(--bg);color:var(--ink);}
-.mm-btns{display:flex;flex-direction:column;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--ink-5);}
-
-/* ================================================================
-   HERO — 감성 · 심플 · 크림톤
-================================================================ */
-.hero{
-  background:var(--cream);
-  position:relative;overflow:hidden;
-  padding:0;
+  --r-sm: 10px;
+  --r:    16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
 }
 
-/* 배경 그라데이션 */
-.hero-bg-grad{
-  position:absolute;inset:0;
+/* ─────────────────────────────────────────────
+   RESET & BASE
+───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+button { font-family: var(--sans); cursor: pointer; border: none; }
+
+/* ─────────────────────────────────────────────
+   UTILITIES
+───────────────────────────────────────────── */
+.con { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
+
+/* fade-up animation */
+.fu {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+.fu.vis { opacity: 1; transform: none; }
+.fu-d1 { transition-delay: .08s; }
+.fu-d2 { transition-delay: .16s; }
+.fu-d3 { transition-delay: .24s; }
+.fu-d4 { transition-delay: .32s; }
+
+/* ─────────────────────────────────────────────
+   NAVIGATION
+───────────────────────────────────────────── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 60px;
+  background: rgba(255, 253, 251, .88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,.06);
+  transition: box-shadow .3s;
+}
+.nav.shadow { box-shadow: 0 2px 24px rgba(0,0,0,.06); }
+.nav-in {
+  max-width: var(--max); margin: 0 auto; padding: 0 32px;
+  height: 100%; display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo img { height: 15px; width: auto; }
+.nav-logo-text {
+  font-size: 18px; font-weight: 900; color: var(--rose);
+  letter-spacing: 2px;
+}
+.nav-links { display: flex; align-items: center; gap: 2px; }
+.nav-link {
+  padding: 7px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: var(--ink-3);
+  transition: all .15s;
+}
+.nav-link:hover { color: var(--ink); background: var(--warm); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-login {
+  font-size: 14px; font-weight: 500; color: var(--ink-3);
+  padding: 7px 14px; border-radius: 8px; transition: all .15s;
+}
+.nav-login:hover { color: var(--ink); }
+.nav-cta {
+  padding: 9px 22px; border-radius: 50px;
+  background: var(--rose); color: #fff;
+  font-size: 14px; font-weight: 600;
+  transition: all .2s var(--ease);
+  box-shadow: 0 4px 14px rgba(255,92,116,.25);
+}
+.nav-cta:hover {
+  background: var(--rose-d);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(255,92,116,.3);
+}
+.hbg {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; padding: 4px;
+}
+.hbg span {
+  display: block; width: 20px; height: 1.5px;
+  background: var(--ink-3); border-radius: 2px; transition: all .2s;
+}
+.mmenu {
+  display: none; position: fixed; inset: 60px 0 0;
+  background: var(--cream); z-index: 99;
+  flex-direction: column; padding: 20px 24px; gap: 4px;
+  border-top: 1px solid var(--ink-5);
+}
+.mmenu.open { display: flex; }
+.mm-link {
+  padding: 13px 14px; border-radius: 10px;
+  font-size: 15px; font-weight: 500; color: var(--ink-2); transition: all .15s;
+}
+.mm-link:hover { background: var(--warm); color: var(--ink); }
+.mm-divider { height: 1px; background: var(--ink-5); margin: 12px 0; }
+.mm-cta {
+  padding: 14px; border-radius: 12px;
+  background: var(--rose); color: #fff;
+  font-size: 15px; font-weight: 600; text-align: center;
+}
+
+/* ─────────────────────────────────────────────
+   SECTION COMMONS
+───────────────────────────────────────────── */
+.section { padding: 120px 32px; }
+.section.sm { padding: 80px 32px; }
+.sec-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--rose); margin-bottom: 16px;
+}
+.sec-h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800; letter-spacing: -1.2px; line-height: 1.15;
+  color: var(--ink); margin-bottom: 18px;
+}
+.sec-h2 .em {
+  background: linear-gradient(135deg, var(--rose), var(--rose-l));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sec-p {
+  font-size: 17px; color: var(--ink-3); line-height: 1.8; font-weight: 300;
+}
+.sec-center { text-align: center; }
+.sec-center .sec-p { max-width: 500px; margin: 0 auto; }
+
+/* ─────────────────────────────────────────────
+   1. HERO V2
+───────────────────────────────────────────── */
+.hero-v2 {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  position: relative; overflow: hidden;
+  padding: 100px 32px 0;
+}
+
+/* 배경 그라데이션 — 아주 연하게 */
+.hv2-bg {
+  position: absolute; inset: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,200,200,.18) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(255,180,160,.1) 0%, transparent 60%),
-    linear-gradient(180deg, #FFFCFA 0%, #FFF8F5 50%, #FFF0EC 100%);
-  z-index:0;
+    radial-gradient(ellipse 60% 50% at 50% -10%, rgba(255,180,190,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 10% 80%, rgba(255,200,180,.1) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 90% 70%, rgba(255,190,200,.08) 0%, transparent 60%);
 }
 
-/* ── 이미지 씬 영역 ── */
-.hero-scene-wrap{
-  position:relative;z-index:1;
-  width:100%;
-  max-height:580px;
-  overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
+/* 카피 */
+.hv2-copy {
+  position: relative; z-index: 2;
+  text-align: center; max-width: 680px; width: 100%;
 }
-/* 감성 씬: SVG 일러스트레이션 */
-.hero-scene-inner{
-  width:100%;height:100%;
-  position:relative;
-  display:flex;align-items:center;justify-content:center;
-  min-height:460px;
+.hv2-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 16px; border-radius: 50px;
+  background: rgba(255, 92, 116, .07);
+  border: 1px solid rgba(255, 92, 116, .18);
+  font-size: 12px; font-weight: 600; color: var(--rose);
+  margin-bottom: 28px; letter-spacing: .2px;
 }
-/* 배경 — 따뜻한 노을 하늘 */
-.hero-scene-bg{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,
-    #FFF5EE 0%,
-    #FFE8D6 30%,
-    #FFDCC8 55%,
-    #FFD4BC 70%,
-    #FFE4D6 85%,
-    #FFF0E8 100%);
+.hv2-pill-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--rose);
+  animation: pdot 2s ease-in-out infinite;
 }
-/* 태양 */
-.hs-sun{
-  position:absolute;
-  width:120px;height:120px;border-radius:50%;
-  background:radial-gradient(circle,#FFD580 0%,#FFAA4C 50%,rgba(255,140,60,.0) 100%);
-  top:15%;left:50%;transform:translateX(-50%);
-  filter:blur(2px);
-  animation:sunPulse 8s ease-in-out infinite;
-}
-@keyframes sunPulse{0%,100%{opacity:.85;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.05);}}
-/* 하늘 구름 */
-.hs-cloud{
-  position:absolute;border-radius:50px;
-  background:rgba(255,255,255,.55);
-  filter:blur(8px);
-}
-.hs-cloud-1{width:180px;height:40px;top:12%;left:8%;}
-.hs-cloud-2{width:120px;height:28px;top:20%;right:12%;}
-.hs-cloud-3{width:90px;height:22px;top:8%;right:30%;}
-/* 언덕 */
-.hs-hill-back{
-  position:absolute;bottom:0;left:-5%;right:-5%;height:55%;
-  background:linear-gradient(180deg,#E8C9A0 0%,#D4A876 100%);
-  border-radius:60% 60% 0 0 / 30% 30% 0 0;
-}
-.hs-hill-front{
-  position:absolute;bottom:0;left:-5%;right:-5%;height:38%;
-  background:linear-gradient(180deg,#C8A870 0%,#B89060 100%);
-  border-radius:50% 50% 0 0 / 20% 20% 0 0;
-}
-/* 나무 실루엣 */
-.hs-tree{position:absolute;bottom:34%;display:flex;flex-direction:column;align-items:center;}
-.hs-tree-top{border-radius:50%;background:rgba(80,120,60,.55);}
-.hs-tree-trunk{background:rgba(100,70,40,.6);border-radius:2px;}
-.hs-tree-1{left:8%;}
-.hs-tree-1 .hs-tree-top{width:52px;height:64px;}
-.hs-tree-1 .hs-tree-trunk{width:8px;height:20px;}
-.hs-tree-2{left:14%;}
-.hs-tree-2 .hs-tree-top{width:36px;height:48px;}
-.hs-tree-2 .hs-tree-trunk{width:6px;height:14px;}
-.hs-tree-3{right:10%;}
-.hs-tree-3 .hs-tree-top{width:48px;height:60px;}
-.hs-tree-3 .hs-tree-trunk{width:7px;height:18px;}
-.hs-tree-4{right:18%;}
-.hs-tree-4 .hs-tree-top{width:32px;height:42px;}
-.hs-tree-4 .hs-tree-trunk{width:5px;height:12px;}
+@keyframes pdot { 0%,100%{opacity:1;} 50%{opacity:.3;} }
 
-/* 커플 실루엣 */
-.hs-couple{
-  position:absolute;bottom:36%;
-  display:flex;align-items:flex-end;gap:4px;
-  animation:coupleSway 6s ease-in-out infinite;
+.hv2-h1 {
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 900; letter-spacing: -2.5px; line-height: 1.08;
+  color: var(--ink); margin-bottom: 22px;
 }
-@keyframes coupleSway{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-.hs-person{display:flex;flex-direction:column;align-items:center;}
-.hs-head{border-radius:50%;background:rgba(50,30,20,.75);}
-.hs-body{border-radius:8px 8px 0 0;background:rgba(50,30,20,.65);}
-.hs-person-a .hs-head{width:20px;height:20px;}
-.hs-person-a .hs-body{width:18px;height:44px;}
-.hs-person-b .hs-head{width:17px;height:17px;}
-.hs-person-b .hs-body{width:16px;height:38px;}
-.hs-couple-arm{
-  position:absolute;bottom:0;
-  width:30px;height:5px;
-  background:rgba(50,30,20,.5);
-  border-radius:3px;
-  left:14px;bottom:20px;
-  transform:rotate(-8deg);
+.hv2-h1 em {
+  font-style: normal; color: var(--rose);
 }
-
-/* 풀 */
-.hs-grass{
-  position:absolute;bottom:0;left:0;right:0;height:36%;
-  background:linear-gradient(180deg,#A89050 0%,#8A7040 60%,#705828 100%);
+.hv2-sub {
+  font-size: 18px; color: var(--ink-3); line-height: 1.75; font-weight: 300;
+  margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto;
 }
-
-/* 반사광 오버레이 */
-.hero-scene-glow{
-  position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 40% at 50% 30%,rgba(255,220,160,.25) 0%,transparent 70%);
-  pointer-events:none;
+.hv2-cta {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  margin-bottom: 48px;
 }
-
-/* 씬 하단 페이드 */
-.hero-scene-fade{
-  position:absolute;bottom:0;left:0;right:0;height:120px;
-  background:linear-gradient(transparent,var(--cream));
-  z-index:2;pointer-events:none;
+.hv2-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 18px 56px; border-radius: 50px;
+  background: var(--rose); color: #fff;
+  font-size: 17px; font-weight: 700; letter-spacing: .1px;
+  box-shadow: 0 8px 32px rgba(255, 92, 116, .28);
+  transition: all .2s var(--ease);
 }
-
-/* ── 카피 영역 ── */
-.hero-copy{
-  position:relative;z-index:3;
-  text-align:center;
-  padding:48px 28px 80px;
-  max-width:700px;margin:0 auto;
+.hv2-btn:hover {
+  background: var(--rose-d); transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(255, 92, 116, .35);
 }
-.hero-eyebrow-new{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:5px 14px;border-radius:20px;
-  background:rgba(255,92,116,.08);border:1px solid rgba(255,92,116,.18);
-  font-size:12px;font-weight:600;color:var(--p);
-  margin-bottom:24px;letter-spacing:.2px;
+.hv2-btn:active { transform: translateY(0); }
+.hv2-link {
+  font-size: 13px; color: var(--ink-4); font-weight: 400;
+  display: flex; align-items: center; gap: 4px; cursor: pointer;
+  transition: color .15s; text-decoration: none;
 }
-.hero-dot{width:5px;height:5px;border-radius:50%;background:var(--p);animation:pulse 2s infinite;}
-.hero-h1-new{
-  font-size:clamp(36px,5.5vw,68px);font-weight:900;
-  color:var(--ink);letter-spacing:-2px;line-height:1.1;
-  margin-bottom:20px;
-  animation:fadeUp .9s var(--ease) both;
-}
-.hero-h1-new em{
-  font-style:normal;
-  color:var(--p);
-}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
-.hero-sub-clean{
-  font-size:18px;color:var(--ink-3);line-height:1.75;font-weight:300;
-  margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;
-  animation:fadeUp .9s .12s var(--ease) both;
-}
-.hero-cta-clean{
-  display:flex;flex-direction:column;align-items:center;gap:14px;
-  animation:fadeUp .9s .22s var(--ease) both;
-  margin-bottom:36px;
-}
-.btn-hero-main{
-  padding:18px 52px;border-radius:50px;border:none;
-  background:var(--p);color:#fff;
-  font-size:17px;font-weight:700;font-family:var(--sans);
-  cursor:pointer;letter-spacing:.1px;
-  box-shadow:0 8px 32px rgba(255,92,116,.28);
-  transition:all .2s var(--ease);
-}
-.btn-hero-main:hover{
-  background:var(--p2);transform:translateY(-2px);
-  box-shadow:0 14px 40px rgba(255,92,116,.35);
-}
-.btn-hero-main:active{transform:translateY(0);}
-.hero-secondary-link{
-  font-size:13px;color:var(--ink-4);font-weight:400;
-  display:flex;align-items:center;gap:4px;cursor:pointer;
-  transition:color .15s;text-decoration:none;
-}
-.hero-secondary-link:hover{color:var(--ink-2);}
+.hv2-link:hover { color: var(--ink-2); }
 
 /* 소셜 프루프 */
-.hero-proof-clean{
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  animation:fadeUp .9s .32s var(--ease) both;
+.hv2-proof {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: 0;
 }
-.hpc-stars{display:flex;gap:2px;justify-content:center;}
-.hpc-stars i{color:#FBBF24;font-size:16px;}
-.hpc-text{font-size:13px;color:var(--ink-4);font-weight:300;}
-.hpc-text strong{color:var(--ink-2);font-weight:600;}
+.hv2-stars { display: flex; gap: 1px; }
+.hv2-stars i { color: #FBBF24; font-size: 14px; }
+.hv2-proof-text { font-size: 13px; color: var(--ink-4); font-weight: 300; }
+.hv2-proof-text strong { color: var(--ink-2); font-weight: 600; }
 
-/* 반응형 */
-@media(max-width:768px){
-  .hero-scene-wrap{max-height:320px;}
-  .hero-scene-inner{min-height:280px;}
-  .hero-h1-new{letter-spacing:-1px;}
-  .hero-copy{padding:36px 24px 64px;}
-  .btn-hero-main{padding:16px 40px;font-size:15px;}
-  .hs-sun{width:80px;height:80px;}
-  .hs-tree-1 .hs-tree-top{width:36px;height:44px;}
-  .hs-tree-3 .hs-tree-top{width:34px;height:42px;}
+/* 이미지 씬 */
+.hv2-scene {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 960px;
+  margin-top: 56px;
+  border-radius: 32px 32px 0 0;
+  overflow: hidden;
 }
-@media(max-width:480px){
-  .hero-scene-wrap{max-height:240px;}
-  .hero-scene-inner{min-height:220px;}
-  .hs-cloud-2,.hs-cloud-3{display:none;}
-}
-
-/* ================================================================
-   AI COMPANION — 공통
-================================================================ */
-.ai-comp{padding:120px 28px;}
-.ai-comp.dark-bg{background:var(--ink);}
-.ai-comp.gray-bg{background:var(--peach);}
-
-/* ── 1. AI Daily Letter ── */
-.dl-card{max-width:700px;margin:56px auto 0;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r-xl);padding:36px 40px;box-shadow:0 8px 48px rgba(91,23,224,.08);position:relative;overflow:hidden;}
-.dl-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FF5C74,#FF8FA3);}
-.dl-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
-.dl-ico{width:36px;height:36px;border-radius:10px;background:var(--p-ll);display:flex;align-items:center;justify-content:center;color:var(--p);font-size:17px;}
-.dl-date{font-size:11px;color:var(--ink-4);}
-.dl-label{font-size:13px;font-weight:700;color:var(--p);flex:1;}
-.dl-body{font-size:18px;color:var(--ink-2);line-height:1.85;font-weight:300;font-style:italic;margin-bottom:22px;letter-spacing:-.1px;}
-.dl-body strong{font-style:normal;color:var(--ink);font-weight:700;}
-.dl-actions{display:flex;align-items:center;gap:8px;}
-.dl-chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--p-lll);color:var(--p);border:1px solid var(--p-ll);cursor:pointer;transition:all .15s;}
-.dl-chip:hover{background:var(--p-ll);}
-.dl-dots{display:flex;gap:5px;margin-left:auto;}
-.dl-dot{width:6px;height:6px;border-radius:50%;background:var(--ink-5);cursor:pointer;}
-.dl-dot.on{background:var(--p);width:18px;border-radius:3px;}
-
-/* ── 2. Relationship Timeline ── */
-.rt-wrap{max-width:820px;margin:56px auto 0;}
-.rt-track{display:flex;align-items:flex-start;position:relative;}
-.rt-track::before{content:'';position:absolute;top:20px;left:20px;right:20px;height:2px;background:linear-gradient(90deg,var(--p) 55%,var(--ink-5) 55%);z-index:0;}
-.rt-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1;}
-.rt-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:10px;box-shadow:0 0 0 4px #fff;transition:all .25s;}
-.rt-circle.done{background:var(--p);color:#fff;}
-.rt-circle.now{background:var(--p);color:#fff;box-shadow:0 0 0 4px var(--p-lll),0 0 0 7px var(--p-ll);}
-.rt-circle.next{background:#fff;color:var(--ink-4);border:2px solid var(--ink-5);}
-.rt-label{font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:2px;}
-.rt-sub{font-size:10px;color:var(--ink-4);}
-.rt-date{font-size:10px;color:var(--p);font-weight:600;margin-top:2px;}
-.rt-ai-tip{max-width:820px;margin:24px auto 0;padding:16px 20px;border-radius:var(--r-sm);background:rgba(255,92,116,.05);border:1px solid rgba(255,92,116,.15);display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);}
-.rt-ai-tip i{color:var(--p);font-size:18px;flex-shrink:0;}
-
-/* ── 3. Relationship Health ── */
-.rh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px;}
-.rh-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r-lg);padding:28px;transition:all .2s var(--ease);}
-.rh-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08);}
-.rh-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.rh-ico{width:36px;height:36px;border-radius:9px;background:var(--p-ll);display:flex;align-items:center;justify-content:center;color:var(--p);font-size:17px;}
-.rh-status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
-.rh-status.good{background:#DCFCE7;color:#15803D;}
-.rh-status.warn{background:#FEF3C7;color:#92400E;}
-.rh-score{font-size:48px;font-weight:900;color:var(--p);letter-spacing:-2px;line-height:1;margin-bottom:4px;}
-.rh-score-lbl{font-size:11px;color:var(--ink-4);}
-.rh-track{height:5px;background:var(--ink-5);border-radius:3px;overflow:hidden;margin:14px 0;}
-.rh-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--p),var(--p3));}
-.rh-rec{font-size:12px;color:var(--ink-2);line-height:1.65;padding:10px 12px;background:var(--p-lll);border-radius:8px;}
-.rh-rec strong{color:var(--p);font-weight:600;}
-
-/* ── 4. First Date Planner ── */
-.fdp-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
-.fdp-steps{display:flex;flex-direction:column;gap:0;}
-.fdp-step{display:flex;align-items:flex-start;gap:14px;padding:18px;border-radius:var(--r);border:1.5px solid var(--ink-5);background:#fff;transition:all .2s;cursor:pointer;position:relative;}
-.fdp-step:hover{border-color:var(--p-ll);}
-.fdp-step.on{border-color:var(--p);background:var(--p-lll);}
-.fdp-connector{width:2px;height:16px;background:var(--ink-5);margin-left:29px;}
-.fdp-step-ico{width:42px;height:42px;border-radius:10px;flex-shrink:0;background:var(--p-ll);display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .2s;}
-.fdp-step.on .fdp-step-ico{background:var(--p);}
-.fdp-step-name{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px;}
-.fdp-step-place{font-size:12px;color:var(--ink-3);}
-.fdp-step-tags{display:flex;gap:6px;margin-top:6px;}
-.fdp-stag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--bg);color:var(--ink-3);}
-.fdp-summary{background:var(--ink);border-radius:var(--r-xl);padding:32px;}
-.fdp-summ-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.8px;text-transform:uppercase;margin-bottom:18px;}
-.fdp-factors{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
-.fdp-factor{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,.65);}
-.fdp-fac-ico{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.fdp-fac-val{margin-left:auto;font-size:12px;font-weight:600;color:var(--p3);}
-.fdp-total{padding:14px;border-radius:var(--r-sm);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;}
-.fdp-total-lbl{font-size:12px;color:rgba(255,255,255,.4);}
-.fdp-total-val{font-size:13px;font-weight:700;color:#fff;}
-
-/* ── 5. Conversation Coach ── */
-.cc-wrap{max-width:600px;margin:56px auto 0;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r-xl);overflow:hidden;box-shadow:0 8px 48px rgba(0,0,0,.08);}
-.cc-header{padding:14px 18px;border-bottom:1px solid var(--ink-5);display:flex;align-items:center;gap:10px;}
-.cc-av{width:34px;height:34px;border-radius:50%;background:var(--p-lll);display:flex;align-items:center;justify-content:center;font-size:17px;}
-.cc-name{font-size:13px;font-weight:700;color:var(--ink);}
-.cc-online{font-size:11px;color:#22C55E;}
-.cc-msgs{padding:18px;display:flex;flex-direction:column;gap:8px;background:var(--bg);}
-.cc-bbl{max-width:72%;padding:10px 13px;border-radius:16px;font-size:12px;line-height:1.6;}
-.cc-bbl.them{background:#fff;color:var(--ink);border-radius:16px 16px 16px 4px;border:1px solid var(--ink-5);}
-.cc-bbl.me{background:var(--p);color:#fff;border-radius:16px 16px 4px 16px;align-self:flex-end;}
-.cc-typing{display:flex;align-items:center;gap:4px;padding:10px 14px;background:#fff;border-radius:16px;width:fit-content;border:1px solid var(--ink-5);}
-.cc-typing span{width:5px;height:5px;border-radius:50%;background:var(--ink-4);animation:blink .9s infinite;}
-.cc-typing span:nth-child(2){animation-delay:.2s;}
-.cc-typing span:nth-child(3){animation-delay:.4s;}
-@keyframes blink{0%,100%{opacity:.3;}50%{opacity:1;}}
-.cc-sug-area{padding:14px 18px;border-top:1px solid var(--ink-5);background:#fff;}
-.cc-sug-lbl{font-size:11px;font-weight:700;color:var(--p);display:flex;align-items:center;gap:5px;margin-bottom:10px;}
-.cc-sug-chips{display:flex;flex-direction:column;gap:6px;}
-.cc-chip{padding:9px 13px;border-radius:var(--r-sm);border:1px solid var(--p-ll);background:var(--p-lll);font-size:12px;color:var(--ink-2);cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:7px;}
-.cc-chip:hover{background:var(--p-ll);}
-.cc-chip i{color:var(--p);font-size:13px;flex-shrink:0;}
-
-/* ── 7. Love Diary + 8. Love Report ── */
-.dr-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:56px;}
-.diary-card{background:var(--ink);border-radius:var(--r-lg);padding:28px;position:relative;overflow:hidden;}
-.diary-bg{position:absolute;width:200px;height:200px;border-radius:50%;background:var(--p);opacity:.06;top:-60px;right:-60px;}
-.diary-date{font-size:11px;color:rgba(255,255,255,.4);font-weight:600;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:5px;}
-.diary-head{font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;}
-.diary-entries{display:flex;flex-direction:column;gap:8px;}
-.diary-entry{display:flex;gap:10px;padding:12px;border-radius:var(--r-sm);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);}
-.diary-entry-ico{font-size:15px;flex-shrink:0;margin-top:1px;}
-.diary-entry-txt{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;font-weight:300;}
-.diary-entry-txt strong{color:var(--p3);font-weight:600;}
-.report-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r-lg);padding:28px;}
-.report-week{font-size:11px;font-weight:700;color:var(--p);letter-spacing:.5px;margin-bottom:10px;}
-.report-head{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:16px;}
-.report-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.rstat{padding:12px;border-radius:var(--r-sm);background:var(--bg);text-align:center;}
-.rstat-n{font-size:22px;font-weight:800;color:var(--p);letter-spacing:-1px;}
-.rstat-l{font-size:10px;color:var(--ink-4);margin-top:2px;}
-.report-fb{padding:12px;border-radius:var(--r-sm);background:var(--p-lll);border:1px solid var(--p-ll);font-size:12px;color:var(--ink-2);line-height:1.65;}
-.report-fb strong{color:var(--p);font-weight:600;}
-
-/* ── 9. Red Flag Detection ── */
-.rf-list{max-width:680px;margin:56px auto 0;display:flex;flex-direction:column;gap:12px;}
-.rf-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r-lg);padding:18px 22px;display:flex;align-items:center;gap:14px;transition:all .2s;}
-.rf-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.07);}
-.rf-ico{width:44px;height:44px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;}
-.rf-ico.safe{background:#DCFCE7;}
-.rf-ico.warn{background:#FEF3C7;}
-.rf-ico.danger{background:#FEE2E2;}
-.rf-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:4px;}
-.rf-tag.safe{background:#DCFCE7;color:#15803D;}
-.rf-tag.warn{background:#FEF3C7;color:#92400E;}
-.rf-tag.danger{background:#FEE2E2;color:#991B1B;}
-.rf-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;}
-.rf-desc{font-size:12px;color:var(--ink-3);line-height:1.5;}
-.rf-score-area{text-align:right;flex-shrink:0;}
-.rf-score-n{font-size:22px;font-weight:800;letter-spacing:-1px;}
-.rf-score-n.safe{color:#15803D;}
-.rf-score-n.warn{color:#D97706;}
-.rf-score-n.danger{color:#DC2626;}
-.rf-score-lbl{font-size:10px;color:var(--ink-4);}
-
-/* ── 10. AI Memory Timeline ── */
-.mt-wrap{max-width:600px;margin:56px auto 0;position:relative;padding-left:32px;}
-.mt-wrap::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--p) 0%,var(--p-ll) 100%);}
-.mt-item{position:relative;margin-bottom:20px;}
-.mt-item::before{content:'';position:absolute;left:-28px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--p);border:2.5px solid #fff;box-shadow:0 0 0 3px var(--p-ll);}
-.mt-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r);padding:14px 16px;transition:all .2s;}
-.mt-card:hover{border-color:var(--p-ll);box-shadow:0 4px 16px rgba(91,23,224,.07);}
-.mt-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.mt-dt{font-size:11px;color:var(--ink-4);}
-.mt-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--p-lll);color:var(--p);}
-.mt-text{font-size:13px;color:var(--ink-2);line-height:1.65;}
-.mt-text strong{color:var(--ink);font-weight:600;}
-
-/* ── 반응형 ── */
-@media(max-width:1024px){
-  .rh-grid{grid-template-columns:1fr 1fr;}
-  .fdp-inner{grid-template-columns:1fr;gap:40px;}
-  .dr-grid{grid-template-columns:1fr;}
-}
-@media(max-width:768px){
-  .ai-comp{padding:80px 20px;}
-  .rh-grid{grid-template-columns:1fr;}
-  .rt-track{flex-direction:column;gap:0;}
-  .rt-track::before{display:none;}
-  .rt-step{flex-direction:row;text-align:left;gap:12px;padding:10px 0;border-bottom:1px solid var(--ink-5);}
-  .rt-step:last-child{border-bottom:none;}
-  .rt-circle{margin-bottom:0;flex-shrink:0;}
-  .dl-card{padding:24px;}
-  .dr-grid{grid-template-columns:1fr;}
-  .fdp-steps{gap:0;}
+.hv2-scene-inner {
+  width: 100%; height: 440px;
+  position: relative;
+  background: linear-gradient(180deg,
+    #FFEEE0 0%, #FFDB C8 20%, #F5C89A 40%,
+    #E8A870 55%, #C88040 70%, #A06030 85%, #7A4820 100%);
 }
 
+/* 노을 씬 */
+.sc-sky {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    #FFE8C8 0%, #FFD4A0 15%, #FFBE78 30%,
+    #F5A050 45%, #E07A30 58%, #C85820 70%,
+    #A04018 80%, #7A3010 90%, #5A2008 100%);
+}
+.sc-sun {
+  position: absolute; top: 10%; left: 50%; transform: translateX(-50%);
+  width: 96px; height: 96px; border-radius: 50%;
+  background: radial-gradient(circle, #FFF8B0 0%, #FFE040 35%, #FFB820 60%, rgba(255,140,0,0) 100%);
+  filter: blur(1px);
+  box-shadow: 0 0 60px 20px rgba(255,200,0,.25);
+  animation: sunrise 10s ease-in-out infinite;
+}
+@keyframes sunrise { 0%,100%{opacity:.85;} 50%{opacity:1;} }
 
-/* ================================================================
+/* 구름 */
+.sc-cloud {
+  position: absolute; border-radius: 50px;
+  background: rgba(255,255,255,.45); filter: blur(10px);
+}
+.sc-c1 { width: 200px; height: 44px; top: 9%; left: 5%; }
+.sc-c2 { width: 140px; height: 32px; top: 17%; right: 8%; }
+.sc-c3 { width: 100px; height: 24px; top: 6%; right: 28%; }
+.sc-c4 { width: 80px; height: 20px; top: 22%; left: 35%; }
+
+/* 산 실루엣 */
+.sc-mtn-far {
+  position: absolute; bottom: 38%; left: 0; right: 0; height: 45%;
+  background: linear-gradient(180deg, #8B5E3C 0%, #6B4428 100%);
+  clip-path: polygon(0 100%, 8% 35%, 18% 55%, 30% 20%, 42% 48%, 55% 15%, 67% 42%, 78% 28%, 90% 50%, 100% 30%, 100% 100%);
+}
+.sc-mtn-near {
+  position: absolute; bottom: 28%; left: 0; right: 0; height: 40%;
+  background: linear-gradient(180deg, #6B4020 0%, #4A2C10 100%);
+  clip-path: polygon(0 100%, 5% 55%, 15% 70%, 25% 38%, 38% 62%, 50% 25%, 62% 55%, 72% 40%, 85% 60%, 95% 42%, 100% 58%, 100% 100%);
+}
+
+/* 나무 */
+.sc-trees {
+  position: absolute; bottom: 26%; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding: 0 40px;
+}
+.sc-tree {
+  display: flex; flex-direction: column; align-items: center;
+}
+.sc-tree-top {
+  background: rgba(20,40,10,.7); border-radius: 50%;
+}
+.sc-tree-trunk {
+  background: rgba(40,25,10,.6); border-radius: 2px;
+}
+
+/* 길 */
+.sc-path {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 80px solid transparent;
+  border-right: 80px solid transparent;
+  border-bottom: 120px solid rgba(150,90,40,.45);
+  filter: blur(1px);
+}
+.sc-path::after {
+  content: ''; position: absolute;
+  bottom: -120px; left: -200px; width: 400px; height: 80px;
+  background: rgba(140,85,38,.35);
+  border-radius: 50%;
+}
+
+/* 땅 */
+.sc-ground {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 28%;
+  background: linear-gradient(180deg, #8B5A28 0%, #5A3818 60%, #3A2010 100%);
+}
+
+/* 커플 실루엣 */
+.sc-couple {
+  position: absolute; bottom: 27%;
+  left: 50%; transform: translateX(-50%);
+  display: flex; align-items: flex-end; gap: 2px;
+  animation: coupleBreathe 5s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.25));
+}
+@keyframes coupleBreathe { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(-3px);} }
+.sc-person { display: flex; flex-direction: column; align-items: center; }
+.sc-head { border-radius: 50%; background: rgba(15,8,3,.85); }
+.sc-body { border-radius: 6px 6px 0 0; }
+.sc-person-a .sc-head { width: 22px; height: 22px; }
+.sc-person-a .sc-body { width: 20px; height: 48px; background: rgba(15,8,3,.75); }
+.sc-person-b .sc-head { width: 19px; height: 19px; }
+.sc-person-b .sc-body { width: 17px; height: 42px; background: rgba(15,8,3,.7); }
+.sc-arm {
+  width: 26px; height: 4px; border-radius: 3px;
+  background: rgba(15,8,3,.6);
+  position: absolute; left: 18px; bottom: 26px;
+  transform: rotate(-12deg);
+  transform-origin: left center;
+}
+
+/* 하단 페이드 */
+.hv2-fade {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 160px;
+  background: linear-gradient(transparent, var(--cream));
+  pointer-events: none; z-index: 3;
+}
+
+/* ─────────────────────────────────────────────
+   2. WHY WENZI
+───────────────────────────────────────────── */
+.why { background: var(--white); }
+.why-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: center; max-width: var(--max); margin: 0 auto;
+}
+.why-left {}
+.why-quote-block {
+  margin-top: 40px; padding: 32px;
+  border-left: 3px solid var(--rose);
+  background: var(--warm);
+  border-radius: 0 16px 16px 0;
+}
+.why-quote {
+  font-size: 22px; font-weight: 700; color: var(--ink);
+  line-height: 1.45; letter-spacing: -.5px; margin-bottom: 10px;
+}
+.why-quote-sub {
+  font-size: 14px; color: var(--ink-3); line-height: 1.7; font-weight: 300;
+}
+.why-right {
+  display: flex; flex-direction: column; gap: 28px;
+}
+.why-card {
+  padding: 28px; border-radius: var(--r-lg);
+  background: var(--cream); border: 1px solid var(--ink-5);
+  transition: all .2s var(--ease);
+}
+.why-card:hover {
+  border-color: var(--blush);
+  box-shadow: 0 8px 32px rgba(255,92,116,.07);
+  transform: translateX(4px);
+}
+.why-card-top {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+}
+.why-ico {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--rose-bg); border: 1px solid var(--blush);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--rose); font-size: 18px; flex-shrink: 0;
+  transition: all .2s;
+}
+.why-card:hover .why-ico { background: var(--rose); color: #fff; }
+.why-card-title { font-size: 16px; font-weight: 700; color: var(--ink); }
+.why-card-desc { font-size: 14px; color: var(--ink-3); line-height: 1.7; font-weight: 300; }
+
+/* ─────────────────────────────────────────────
+   3. 오늘의 인연
+───────────────────────────────────────────── */
+.today { background: var(--warm); }
+.today-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: center; max-width: var(--max); margin: 0 auto;
+}
+.today-left {}
+.today-points { display: flex; flex-direction: column; gap: 20px; margin-top: 36px; }
+.today-pt {
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.today-pt-ico {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  background: var(--rose-bg); border: 1px solid var(--blush);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--rose);
+}
+.today-pt-text { font-size: 15px; color: var(--ink-2); line-height: 1.65; }
+.today-pt-text strong { color: var(--ink); font-weight: 700; display: block; margin-bottom: 2px; font-size: 15px; }
+
+/* 추천 카드 목업 */
+.today-card {
+  background: var(--white);
+  border-radius: 28px;
+  border: 1px solid rgba(0,0,0,.07);
+  box-shadow: 0 20px 60px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+  overflow: hidden;
+  max-width: 320px; margin: 0 auto;
+  animation: cardFloat 7s ease-in-out infinite;
+}
+@keyframes cardFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+
+.tc-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--ink-5);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tc-header-label {
+  font-size: 12px; font-weight: 700; color: var(--ink-3);
+  display: flex; align-items: center; gap: 5px;
+}
+.tc-header-label i { color: var(--rose); font-size: 14px; }
+.tc-plan {
+  font-size: 10px; font-weight: 700; color: var(--rose);
+  background: var(--rose-bg); padding: 3px 8px; border-radius: 6px;
+}
+.tc-photo {
+  height: 200px; position: relative; overflow: hidden;
+  background: linear-gradient(160deg, #FFE4EC, #FFB8CC, #FF8FA8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 72px;
+}
+.tc-photo-grad {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 90px;
+  background: linear-gradient(transparent, rgba(0,0,0,.65));
+}
+.tc-name-row {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 16px;
+}
+.tc-name { font-size: 19px; font-weight: 700; color: #fff; }
+.tc-meta { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+.tc-score {
+  position: absolute; top: 12px; right: 12px;
+  background: #fff; border-radius: 20px; padding: 5px 11px;
+  font-size: 13px; font-weight: 800; color: var(--rose);
+  display: flex; align-items: center; gap: 3px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+.tc-body { padding: 16px 18px 18px; }
+.tc-trust {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; color: #15803D;
+  background: rgba(34,197,94,.07); border-radius: 8px;
+  padding: 7px 10px; margin-bottom: 12px;
+}
+.tc-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+.tc-tag {
+  padding: 4px 10px; border-radius: 8px;
+  font-size: 11px; font-weight: 500;
+  background: var(--rose-bg); color: var(--rose);
+  border: 1px solid var(--blush);
+}
+.tc-comment {
+  font-size: 12px; color: var(--ink-3); line-height: 1.65;
+  background: var(--warm); border-radius: 10px; padding: 10px 12px;
+  margin-bottom: 14px;
+}
+.tc-comment strong { color: var(--rose); font-weight: 600; }
+.tc-btns { display: flex; gap: 8px; }
+.tc-btn-pass {
+  flex: 1; padding: 11px; border-radius: 12px;
+  background: var(--cream); border: 1.5px solid var(--ink-5);
+  font-size: 13px; font-weight: 600; color: var(--ink-3);
+  transition: all .15s;
+}
+.tc-btn-pass:hover { border-color: var(--ink-4); }
+.tc-btn-like {
+  flex: 2; padding: 11px; border-radius: 12px;
+  background: var(--rose); color: #fff; border: none;
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  transition: all .15s;
+}
+.tc-btn-like:hover { background: var(--rose-d); }
+.tc-timer {
+  text-align: center; font-size: 11px; color: var(--ink-4); margin-top: 9px;
+}
+
+/* ─────────────────────────────────────────────
+   4. AI DAILY LETTER
+───────────────────────────────────────────── */
+.letter-sec { background: var(--ink); }
+.letter-inner {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: center;
+}
+.letter-left .sec-h2 { color: #fff; }
+.letter-left .sec-eyebrow { color: rgba(255,143,163,.9); }
+.letter-left .sec-p { color: rgba(255,255,255,.5); }
+.letter-desc {
+  margin-top: 28px; padding: 24px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--r);
+  background: rgba(255,255,255,.03);
+  font-size: 15px; color: rgba(255,255,255,.6);
+  line-height: 1.75; font-weight: 300;
+}
+.letter-desc strong { color: rgba(255,143,163,.9); font-weight: 600; }
+.letter-card-demo {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 24px; overflow: hidden;
+}
+.lc-top {
+  height: 3px;
+  background: linear-gradient(90deg, var(--rose), var(--rose-l));
+}
+.lc-body { padding: 28px; }
+.lc-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.lc-ico {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,92,116,.2); border: 1px solid rgba(255,92,116,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+.lc-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,.8); }
+.lc-date { font-size: 11px; color: rgba(255,255,255,.35); margin-left: auto; }
+.lc-text {
+  font-size: 16px; color: rgba(255,255,255,.75);
+  line-height: 1.8; font-weight: 300; font-style: italic;
+  margin-bottom: 20px;
+}
+.lc-text strong { font-style: normal; color: rgba(255,143,163,.95); font-weight: 600; }
+.lc-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.lc-chip {
+  padding: 6px 13px; border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+  background: rgba(255,92,116,.12); border: 1px solid rgba(255,92,116,.2);
+  color: rgba(255,143,163,.9); cursor: pointer; transition: all .15s;
+}
+.lc-chip:hover { background: rgba(255,92,116,.2); }
+
+/* ─────────────────────────────────────────────
+   5. AI 궁합
+───────────────────────────────────────────── */
+.compat-sec { background: var(--white); }
+.compat-inner {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  align-items: center;
+}
+.compat-card {
+  background: var(--white);
+  border-radius: 28px; padding: 32px;
+  border: 1px solid var(--ink-5);
+  box-shadow: 0 8px 40px rgba(0,0,0,.06);
+}
+.cc-pair {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+}
+.cc-av {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--rose-bg), var(--blush));
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+  border: 2px solid var(--blush);
+}
+.cc-vs { font-size: 18px; color: var(--rose); }
+.cc-score-area { text-align: right; margin-left: auto; }
+.cc-score-big {
+  font-size: 52px; font-weight: 900; letter-spacing: -2px; line-height: 1;
+  background: linear-gradient(135deg, var(--rose), var(--rose-l));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cc-score-lbl { font-size: 11px; color: var(--ink-4); margin-top: 3px; }
+.cc-bars { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.cc-bar-lbl {
+  display: flex; justify-content: space-between;
+  font-size: 12px; margin-bottom: 5px;
+}
+.cc-bar-lbl span:first-child { color: var(--ink-3); }
+.cc-bar-lbl span:last-child { font-weight: 700; color: var(--ink); }
+.cc-track { height: 5px; background: var(--ink-5); border-radius: 3px; overflow: hidden; }
+.cc-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--rose), var(--rose-l)); }
+.cc-insight {
+  padding: 14px; border-radius: var(--r-sm);
+  background: var(--rose-bg); border: 1px solid var(--blush);
+  font-size: 13px; color: var(--ink-2); line-height: 1.65;
+}
+.cc-insight strong { color: var(--rose); font-weight: 600; }
+
+/* ─────────────────────────────────────────────
+   6. 후기
+───────────────────────────────────────────── */
+.reviews-sec { background: var(--warm); }
+.reviews-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; margin-top: 60px; max-width: var(--max); margin-left: auto; margin-right: auto;
+}
+.rv {
+  background: var(--white); border-radius: 20px; padding: 28px;
+  border: 1px solid rgba(0,0,0,.06);
+  transition: all .2s var(--ease);
+}
+.rv:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0,0,0,.07);
+}
+.rv-stars { display: flex; gap: 2px; margin-bottom: 16px; }
+.rv-stars i { color: #FBBF24; font-size: 15px; }
+.rv-body {
+  font-size: 15px; color: var(--ink-2); line-height: 1.75;
+  margin-bottom: 20px; font-weight: 300;
+}
+.rv-body::before { content: '\201C'; color: var(--rose); font-weight: 700; }
+.rv-body::after  { content: '\201D'; color: var(--rose); font-weight: 700; }
+.rv-author { display: flex; align-items: center; gap: 10px; }
+.rv-av {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--rose-bg); border: 2px solid var(--blush);
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.rv-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.rv-meta { font-size: 12px; color: var(--ink-4); margin-top: 1px; }
+.rv-match { font-size: 11px; font-weight: 600; color: var(--rose); margin-top: 2px; }
+
+/* ─────────────────────────────────────────────
+   7. PREMIUM
+───────────────────────────────────────────── */
+.premium-sec { background: var(--white); }
+.plans {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; margin-top: 64px; max-width: 900px; margin-left: auto; margin-right: auto;
+}
+.plan {
+  border-radius: 24px; padding: 32px;
+  border: 2px solid var(--ink-5); background: var(--white);
+  position: relative; transition: all .2s var(--ease);
+}
+.plan:hover { transform: translateY(-4px); border-color: var(--blush); }
+.plan.featured {
+  border-color: var(--rose); background: var(--rose);
+}
+.plan-pop {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px;
+  white-space: nowrap;
+}
+.plan.featured .plan-pop { background: var(--ink); }
+.plan-name {
+  font-size: 13px; font-weight: 600; color: var(--ink-3);
+  letter-spacing: .3px; margin-bottom: 10px;
+}
+.plan.featured .plan-name { color: rgba(255,255,255,.7); }
+.plan-price {
+  font-size: 40px; font-weight: 900; color: var(--ink);
+  letter-spacing: -1.5px; line-height: 1;
+}
+.plan-price sub { font-size: 15px; font-weight: 400; color: var(--ink-3); }
+.plan.featured .plan-price { color: #fff; }
+.plan.featured .plan-price sub { color: rgba(255,255,255,.6); }
+.plan-div { height: 1px; background: var(--ink-5); margin: 20px 0; }
+.plan.featured .plan-div { background: rgba(255,255,255,.2); }
+.plan-feats { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.plan-feat {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 13px; color: var(--ink-2);
+}
+.plan.featured .plan-feat { color: rgba(255,255,255,.9); }
+.plan-feat i { font-size: 16px; color: var(--rose); flex-shrink: 0; }
+.plan.featured .plan-feat i { color: rgba(255,255,255,.8); }
+.plan-feat.off { color: var(--ink-4); }
+.plan-feat.off i { color: var(--ink-5); }
+.plan-btn {
+  width: 100%; padding: 13px; border-radius: var(--r-sm);
+  border: 2px solid var(--ink-5); background: transparent;
+  color: var(--ink-2); font-size: 14px; font-weight: 600; font-family: var(--sans);
+  transition: all .15s;
+}
+.plan-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+.plan.featured .plan-btn {
+  background: #fff; border-color: transparent; color: var(--rose);
+}
+.plan.featured .plan-btn:hover { background: rgba(255,255,255,.9); }
+
+/* ─────────────────────────────────────────────
+   8. FAQ
+───────────────────────────────────────────── */
+.faq-sec { background: var(--cream); }
+.faq-list {
+  max-width: 680px; margin: 64px auto 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.faq-item {
+  background: var(--white); border-radius: var(--r);
+  border: 1px solid var(--ink-5); overflow: hidden;
+}
+.faq-q {
+  padding: 20px 22px; width: 100%; text-align: left;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  background: none; border: none; font-family: var(--sans);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; cursor: pointer; transition: all .15s;
+}
+.faq-q:hover { color: var(--rose); }
+.faq-q.open { color: var(--rose); }
+.faq-q i { font-size: 18px; flex-shrink: 0; transition: transform .25s; }
+.faq-q.open i { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s var(--ease), padding .35s;
+}
+.faq-a-inner {
+  padding: 0 22px 20px;
+  font-size: 14px; color: var(--ink-3); line-height: 1.75; font-weight: 300;
+}
+
+/* ─────────────────────────────────────────────
+   CTA BANNER
+───────────────────────────────────────────── */
+.cta-banner {
+  padding: 120px 32px;
+  background: linear-gradient(135deg, #FF4560 0%, #FF6B81 50%, #FF8FA3 100%);
+  text-align: center; position: relative; overflow: hidden;
+}
+.cta-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 60% at 20% 30%, rgba(255,255,255,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 70%, rgba(255,255,255,.05) 0%, transparent 60%);
+}
+.cta-inner { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+.cta-h2 {
+  font-size: clamp(30px, 4.5vw, 52px); font-weight: 900;
+  color: #fff; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 18px;
+}
+.cta-p { font-size: 17px; color: rgba(255,255,255,.75); line-height: 1.75; font-weight: 300; margin-bottom: 40px; }
+.cta-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 18px 52px; border-radius: 50px;
+  background: #fff; color: var(--rose);
+  font-size: 17px; font-weight: 700; letter-spacing: .1px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.15);
+  transition: all .2s var(--ease); cursor: pointer; border: none; font-family: var(--sans);
+}
+.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,0,0,.2); }
+.cta-note { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 16px; }
+
+/* ─────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────── */
+.footer { background: var(--ink); padding: 64px 32px 32px; }
+.footer-in { max-width: var(--max); margin: 0 auto; }
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px; margin-bottom: 48px;
+}
+.footer-logo-img { height: 14px; width: auto; filter: brightness(0) invert(1); opacity: .8; margin-bottom: 14px; }
+.footer-logo-txt { font-size: 16px; font-weight: 900; color: #fff; letter-spacing: 2px; margin-bottom: 14px; }
+.footer-tagline { font-size: 13px; color: rgba(255,255,255,.35); line-height: 1.7; font-weight: 300; max-width: 220px; margin-bottom: 20px; }
+.footer-socs { display: flex; gap: 8px; }
+.footer-soc {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.09);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.4); font-size: 16px; cursor: pointer; transition: all .15s;
+}
+.footer-soc:hover { background: var(--rose); color: #fff; border-color: var(--rose); }
+.footer-col-t {
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,.35);
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px;
+}
+.footer-links { display: flex; flex-direction: column; gap: 9px; }
+.footer-lk {
+  font-size: 13px; color: rgba(255,255,255,.45); font-weight: 300;
+  transition: color .15s; cursor: pointer;
+}
+.footer-lk:hover { color: #fff; }
+.footer-bot {
+  border-top: 1px solid rgba(255,255,255,.07); padding-top: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: rgba(255,255,255,.25);
+}
+.footer-bot-links { display: flex; gap: 20px; }
+
+/* ─────────────────────────────────────────────
    SCROLL TOP
-================================================================ */
-.scroll-top{
-  position:fixed;bottom:28px;right:28px;z-index:50;
-  width:44px;height:44px;border-radius:var(--r-sm);
-  background:var(--p);color:#fff;border:none;
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-  opacity:0;transform:translateY(8px);transition:all .2s;
-  box-shadow:0 4px 20px rgba(255,92,116,.3);cursor:pointer;
+───────────────────────────────────────────── */
+.scroll-top {
+  position: fixed; bottom: 28px; right: 28px; z-index: 50;
+  width: 44px; height: 44px; border-radius: var(--r-sm);
+  background: var(--rose); color: #fff; border: none;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  opacity: 0; transform: translateY(8px); transition: all .2s;
+  box-shadow: 0 4px 16px rgba(255,92,116,.3); cursor: pointer;
 }
-.scroll-top.show{opacity:1;transform:none;}
-.scroll-top:hover{background:var(--p2);}
+.scroll-top.show { opacity: 1; transform: none; }
+.scroll-top:hover { background: var(--rose-d); }
 
-/* ================================================================
+/* ─────────────────────────────────────────────
    RESPONSIVE
-================================================================ */
-@media(max-width:1024px){
-  .hero-grid{grid-template-columns:1fr;gap:56px;}
-  .hero-right{order:-1;}
-  .fc1,.fc2,.fc3{display:none;}
-  .rec-card{width:280px;}
-  .phil-inner{grid-template-columns:1fr;}
-  .feat-card.featured{grid-column:span 1;display:block;}
-  .feat-card.featured .feat-ai-demo{margin-top:24px;}
-  .flow-steps{grid-template-columns:repeat(3,1fr);gap:32px;}
-  .flow-steps::before{display:none;}
-  .tp-inner{grid-template-columns:1fr;}
-  .trust-grid{grid-template-columns:1fr 1fr;}
-  .trust-score-demo{grid-template-columns:1fr;gap:24px;}
-  .tsd-left{text-align:left;}
-  .footer-top{grid-template-columns:1fr 1fr;gap:32px;}
+───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .why-grid, .today-inner, .compat-inner, .letter-inner { grid-template-columns: 1fr; gap: 48px; }
+  .why-right { gap: 16px; }
+  .reviews-grid { grid-template-columns: 1fr; max-width: 480px; }
+  .plans { grid-template-columns: 1fr; max-width: 400px; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .today-card { max-width: 100%; }
 }
-@media(max-width:768px){
-  .nav-links,.nav-login,.nav-right .btn{display:none;}
-  .hbg{display:flex;}
-  .section{padding:80px 20px;}
-  .philosophy,.todaypick,.trust,.premium,.reviews,.ctabanner{padding:80px 20px;}
-  .feat-grid{grid-template-columns:1fr;}
-  .flow-steps{grid-template-columns:repeat(2,1fr);}
-  .tp-inner,.phil-inner{gap:40px;}
-  .trust-grid{grid-template-columns:1fr;}
-  .plans-wrap{grid-template-columns:1fr;max-width:400px;}
-  .reviews-grid{grid-template-columns:1fr;}
-  .footer-top{grid-template-columns:1fr;}
-  .footer-bottom{flex-direction:column;gap:12px;text-align:center;}
-  .footer-bottom-links{flex-wrap:wrap;justify-content:center;}
-
-  .cta-btns{flex-direction:column;align-items:center;}
+@media (max-width: 768px) {
+  .nav-links, .nav-login, .nav-right .nav-cta { display: none; }
+  .hbg { display: flex; }
+  .section { padding: 80px 24px; }
+  .section.sm { padding: 60px 24px; }
+  .hv2-h1 { letter-spacing: -1.2px; }
+  .hv2-scene-inner { height: 280px; }
+  .hv2-scene { margin-top: 40px; }
+  .sc-sun { width: 64px; height: 64px; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .plans { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 28px; }
+  .footer-bot { flex-direction: column; gap: 12px; text-align: center; }
+  .footer-bot-links { flex-wrap: wrap; justify-content: center; }
+  .cta-banner { padding: 80px 24px; }
 }
-@media(max-width:480px){
-  .flow-steps{grid-template-columns:1fr;}
-  .hero-proof{grid-template-columns:1fr;gap:16px;}
+@media (max-width: 480px) {
+  .hv2-h1 { letter-spacing: -.8px; }
+  .hv2-scene-inner { height: 220px; }
+  .sc-c2, .sc-c3, .sc-c4 { display: none; }
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- ════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-in">
     <a href="#" class="nav-logo">
-      <img src="logo.png" alt="WENZI" onerror="this.outerHTML='<span style=\'font-size:17px;font-weight:900;color:#5B17E0;letter-spacing:2px\'>WENZI</span>'">
+      <img src="logo.png" alt="WENZI"
+        onerror="this.outerHTML='<span class=\'nav-logo-text\'>WENZI</span>'">
     </a>
     <div class="nav-links">
-      <a href="#how" class="nav-link">서비스 소개</a>
-      <a href="#features" class="nav-link">AI 기능</a>
-      <a href="#trust" class="nav-link">신뢰도</a>
-      <a href="#premium" class="nav-link">프리미엄</a>
-      <a href="#daily-letter" class="nav-link">AI 기능</a>
+      <a href="#why"     class="nav-link">왜 WENZI인가</a>
+      <a href="#today"   class="nav-link">오늘의 인연</a>
       <a href="#reviews" class="nav-link">후기</a>
+      <a href="#premium" class="nav-link">프리미엄</a>
+      <a href="#faq"     class="nav-link">FAQ</a>
     </div>
     <div class="nav-right">
       <a href="#" class="nav-login">로그인</a>
-      <a href="#" class="btn btn-md" style="background:var(--p);color:#fff;border-radius:50px;padding:9px 22px;box-shadow:0 4px 16px rgba(255,92,116,.2);">무료 시작</a>
+      <a href="#" class="nav-cta">무료 시작</a>
     </div>
     <button class="hbg" id="hbg" onclick="toggleMenu()" aria-label="메뉴">
       <span></span><span></span><span></span>
@@ -578,856 +920,345 @@ button{font-family:var(--sans);cursor:pointer;}
 
 <!-- 모바일 메뉴 -->
 <div class="mmenu" id="mmenu">
-  <a href="#how"      class="mm-link" onclick="toggleMenu()">서비스 소개</a>
-  <a href="#features" class="mm-link" onclick="toggleMenu()">AI 기능</a>
-  <a href="#trust"    class="mm-link" onclick="toggleMenu()">신뢰도</a>
-  <a href="#premium"  class="mm-link" onclick="toggleMenu()">프리미엄</a>
-  <a href="#daily-letter" class="mm-link" onclick="toggleMenu()">AI 기능</a>
-  <a href="#reviews"  class="mm-link" onclick="toggleMenu()">후기</a>
-  <div class="mm-btns">
-    <a href="#" class="btn btn-ghost btn-lg" style="justify-content:center;">로그인</a>
-    <a href="#" class="btn btn-p btn-lg" style="justify-content:center;">무료로 시작하기</a>
-  </div>
+  <a href="#why"     class="mm-link" onclick="toggleMenu()">왜 WENZI인가</a>
+  <a href="#today"   class="mm-link" onclick="toggleMenu()">오늘의 인연</a>
+  <a href="#reviews" class="mm-link" onclick="toggleMenu()">후기</a>
+  <a href="#premium" class="mm-link" onclick="toggleMenu()">프리미엄</a>
+  <a href="#faq"     class="mm-link" onclick="toggleMenu()">FAQ</a>
+  <div class="mm-divider"></div>
+  <a href="#" class="mm-cta">무료로 시작하기</a>
 </div>
 
-<!-- ================================================================
-     HERO
-================================================================ -->
-<section class="hero">
-  <div class="hero-bg-grad"></div>
 
-  <!-- 감성 씬 이미지 -->
-  <div class="hero-scene-wrap">
-    <div class="hero-scene-inner">
-      <!-- 배경 -->
-      <div class="hero-scene-bg"></div>
-      <!-- 태양 -->
-      <div class="hs-sun"></div>
-      <!-- 구름 -->
-      <div class="hs-cloud hs-cloud-1"></div>
-      <div class="hs-cloud hs-cloud-2"></div>
-      <div class="hs-cloud hs-cloud-3"></div>
-      <!-- 뒷 언덕 -->
-      <div class="hs-hill-back"></div>
-      <!-- 나무들 -->
-      <div class="hs-tree hs-tree-1" style="position:absolute;left:8%;bottom:34%;">
-        <div class="hs-tree-top" style="width:52px;height:64px;"></div>
-        <div class="hs-tree-trunk" style="width:8px;height:20px;"></div>
-      </div>
-      <div class="hs-tree hs-tree-2" style="position:absolute;left:16%;bottom:34%;">
-        <div class="hs-tree-top" style="width:36px;height:48px;"></div>
-        <div class="hs-tree-trunk" style="width:6px;height:14px;"></div>
-      </div>
-      <div class="hs-tree hs-tree-3" style="position:absolute;right:10%;bottom:34%;">
-        <div class="hs-tree-top" style="width:48px;height:60px;"></div>
-        <div class="hs-tree-trunk" style="width:7px;height:18px;"></div>
-      </div>
-      <div class="hs-tree hs-tree-4" style="position:absolute;right:20%;bottom:34%;">
-        <div class="hs-tree-top" style="width:32px;height:42px;"></div>
-        <div class="hs-tree-trunk" style="width:5px;height:12px;"></div>
-      </div>
-      <!-- 앞 언덕 -->
-      <div class="hs-hill-front"></div>
-      <!-- 커플 실루엣 -->
-      <div class="hs-couple" style="left:50%;transform:translateX(-50%);">
-        <div class="hs-person hs-person-a">
-          <div class="hs-head" style="width:20px;height:20px;"></div>
-          <div class="hs-body" style="width:18px;height:44px;"></div>
-        </div>
-        <div class="hs-person hs-person-b">
-          <div class="hs-head" style="width:17px;height:17px;"></div>
-          <div class="hs-body" style="width:16px;height:38px;"></div>
-        </div>
-      </div>
-      <!-- 풀 -->
-      <div class="hs-grass"></div>
-      <!-- 반사광 -->
-      <div class="hero-scene-glow"></div>
-    </div>
-    <!-- 씬 하단 페이드 아웃 -->
-    <div class="hero-scene-fade"></div>
-  </div>
+<!-- ════════════════════════════════════════
+     1. HERO V2
+════════════════════════════════════════ -->
+<section class="hero-v2">
+  <div class="hv2-bg"></div>
 
   <!-- 카피 -->
-  <div class="hero-copy">
-    <div class="hero-eyebrow-new">
-      <span class="hero-dot"></span>
+  <div class="hv2-copy fu">
+    <div class="hv2-pill">
+      <span class="hv2-pill-dot"></span>
       오늘 가입하면 24시간 내 첫 추천
     </div>
 
-    <h1 class="hero-h1-new">
-      오늘,<br>
-      당신과 가장 잘 맞는<br>
-      <em>한 사람</em>을 만나보세요.
+    <h1 class="hv2-h1">
+      오늘, 당신과<br>가장 잘 맞는<br><em>한 사람</em>을 만나보세요.
     </h1>
 
-    <p class="hero-sub-clean">
+    <p class="hv2-sub">
       AI가 당신의 가치관과 생활패턴을 이해하고<br>
       오늘 가장 잘 맞는 인연을 추천합니다.
     </p>
 
-    <div class="hero-cta-clean">
-      <button class="btn-hero-main">무료 시작하기</button>
-      <a href="#how" class="hero-secondary-link">
-        어떻게 작동하나요? <i class="ti ti-chevron-down" style="font-size:13px;"></i>
+    <div class="hv2-cta">
+      <a href="#" class="hv2-btn">무료 시작하기</a>
+      <a href="#why" class="hv2-link">
+        어떻게 작동하나요? <i class="ti ti-chevron-down" style="font-size:13px"></i>
       </a>
     </div>
 
-    <div class="hero-proof-clean">
-      <div class="hpc-stars">
-        <i class="ti ti-star-filled"></i>
-        <i class="ti ti-star-filled"></i>
-        <i class="ti ti-star-filled"></i>
-        <i class="ti ti-star-filled"></i>
+    <div class="hv2-proof">
+      <div class="hv2-stars">
+        <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
+        <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
         <i class="ti ti-star-filled"></i>
       </div>
-      <div class="hpc-text">
+      <span style="width:8px;"></span>
+      <p class="hv2-proof-text">
         <strong>10,000명 이상</strong>이 WENZI에서 좋은 인연을 만났습니다.
-      </div>
-    </div>
-  </div>
-</section>
-<!-- ================================================================
-     PHILOSOPHY
-================================================================ -->
-<section class="philosophy" id="how">
-  <div class="phil-inner con">
-    <div class="phil-left fu">
-      <div class="s-label">Philosophy</div>
-      <h2 class="s-title" style="color:#fff">
-        소개팅 앱이 아닙니다.<br>
-        <span class="g">AI Relationship<br>Manager입니다.</span>
-      </h2>
-      <p class="s-desc" style="color:rgba(255,255,255,.5)">
-        많이 만나는 것이 목표가 아닙니다.<br>
-        <strong style="color:rgba(255,255,255,.8)">"가장 잘 맞는 한 사람"</strong>을 만나게 합니다.
       </p>
-      <div class="phil-quote">
-        <div class="pq-text">"많이 만나는 것보다,<br>잘 맞는 한 사람."</div>
-        <div class="pq-sub">WENZI는 하루에 수백 명을 스와이프하는 경험을 제거했습니다.<br>AI가 충분히 분석한 뒤, 오늘 가장 잘 맞는 단 한 명만 추천합니다.</div>
-      </div>
-    </div>
-
-    <div class="phil-right fu" style="transition-delay:.1s">
-      <div class="pf-item">
-        <div class="pf-num">01</div>
-        <div><div class="pf-title">매칭</div><div class="pf-desc">AI가 가치관·생활패턴·대화스타일 분석 후 최적의 한 사람 추천</div></div>
-      </div>
-      <div class="pf-arrow"><i class="ti ti-arrow-down"></i></div>
-      <div class="pf-item">
-        <div class="pf-num">02</div>
-        <div><div class="pf-title">대화</div><div class="pf-desc">AI 대화 코치가 첫 질문부터 자연스러운 대화 흐름을 도와줌</div></div>
-      </div>
-      <div class="pf-arrow"><i class="ti ti-arrow-down"></i></div>
-      <div class="pf-item">
-        <div class="pf-num">03</div>
-        <div><div class="pf-title">데이트</div><div class="pf-desc">두 사람의 취향·거리·예산·날씨를 고려한 AI 데이트 코스 추천</div></div>
-      </div>
-      <div class="pf-arrow"><i class="ti ti-arrow-down"></i></div>
-      <div class="pf-item">
-        <div class="pf-num">04</div>
-        <div><div class="pf-title">관계 발전</div><div class="pf-desc">후기 분석으로 다음 추천 정확도 향상, 지속적인 AI 관계 관리</div></div>
-      </div>
     </div>
   </div>
-</section>
 
-<!-- ================================================================
-     FEATURES
-================================================================ -->
-<section class="features section" id="features">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">AI Features</div>
-      <h2 class="s-title">업계 최고 수준의<br><span class="g">AI 매칭 시스템</span></h2>
-      <p class="s-desc">단순한 알고리즘이 아닙니다. AI가 당신을 깊이 이해하고<br>진짜 잘 맞는 사람을 찾아드립니다.</p>
-    </div>
-
-    <div class="feat-grid">
-      <!-- 하루 한 명 -->
-      <div class="feat-card fu" style="transition-delay:.05s">
-        <div class="feat-num">FEATURE 01</div>
-        <div class="feat-ico"><i class="ti ti-user-heart"></i></div>
-        <div class="feat-title">하루 한 명 추천</div>
-        <div class="feat-desc">무한 스와이프를 없앴습니다. AI가 하루에 가장 잘 맞는 단 한 명만 추천합니다. Premium은 최대 3명.</div>
-        <div class="feat-tags"><span class="feat-tag">무한 스와이프 제거</span><span class="feat-tag">고품질 매칭</span></div>
-      </div>
-
-      <!-- AI 궁합 -->
-      <div class="feat-card fu" style="transition-delay:.1s">
-        <div class="feat-num">FEATURE 02</div>
-        <div class="feat-ico"><i class="ti ti-brain"></i></div>
-        <div class="feat-title">AI 궁합 분석</div>
-        <div class="feat-desc">가치관, 생활패턴, 연락 스타일, 연애관 6가지 항목을 AI가 정밀 분석합니다. 왜 잘 맞는지 설명도 제공합니다.</div>
-        <div class="feat-tags"><span class="feat-tag">6가지 분석</span><span class="feat-tag">설명 가능한 AI</span></div>
-      </div>
-
-      <!-- AI 연애 코치 — Featured -->
-      <div class="feat-card featured fu" style="transition-delay:.15s">
-        <div class="feat-content">
-          <div class="feat-num">FEATURE 03</div>
-          <div class="feat-ico"><i class="ti ti-message-dots"></i></div>
-          <div class="feat-title">AI 연애 코치</div>
-          <div class="feat-desc">대화가 끊기면 AI가 새로운 질문을 추천합니다. 첫 데이트 코스, 관계 발전 팁까지 AI가 함께합니다.</div>
-          <div class="feat-tags"><span class="feat-tag">AI 첫 질문 추천</span><span class="feat-tag">AI 데이트 코스</span><span class="feat-tag">관계 관리</span></div>
+  <!-- 노을 씬 이미지 -->
+  <div class="hv2-scene fu fu-d2">
+    <div class="hv2-scene-inner">
+      <!-- 하늘 -->
+      <div class="sc-sky"></div>
+      <!-- 태양 -->
+      <div class="sc-sun"></div>
+      <!-- 구름 -->
+      <div class="sc-cloud sc-c1"></div>
+      <div class="sc-cloud sc-c2"></div>
+      <div class="sc-cloud sc-c3"></div>
+      <div class="sc-cloud sc-c4"></div>
+      <!-- 산 -->
+      <div class="sc-mtn-far"></div>
+      <div class="sc-mtn-near"></div>
+      <!-- 나무 -->
+      <div class="sc-trees">
+        <div class="sc-tree">
+          <div class="sc-tree-top" style="width:50px;height:65px;"></div>
+          <div class="sc-tree-trunk" style="width:8px;height:22px;"></div>
         </div>
-        <div class="feat-ai-demo">
-          <div class="fad-bg"></div>
-          <div class="fad-title"><i class="ti ti-sparkles" style="font-size:13px"></i> AI Match Report</div>
-          <div class="fad-score-row">
-            <div class="fad-big">92<sub>%</sub></div>
-            <div style="font-size:12px;color:rgba(255,255,255,.4);line-height:1.6;">가장 잘<br>맞는 사람</div>
-          </div>
-          <div class="fad-bars">
-            <div class="fad-bar"><div class="fad-bar-top"><span>가치관</span><span>95%</span></div><div class="fad-track"><div class="fad-fill" style="width:95%"></div></div></div>
-            <div class="fad-bar"><div class="fad-bar-top"><span>생활패턴</span><span>90%</span></div><div class="fad-track"><div class="fad-fill" style="width:90%"></div></div></div>
-            <div class="fad-bar"><div class="fad-bar-top"><span>연락 스타일</span><span>94%</span></div><div class="fad-track"><div class="fad-fill" style="width:94%"></div></div></div>
-            <div class="fad-bar"><div class="fad-bar-top"><span>연애관</span><span>89%</span></div><div class="fad-track"><div class="fad-fill" style="width:89%"></div></div></div>
-          </div>
-          <div class="fad-insight"><strong>추천 첫 대화</strong> — "주말에는 주로 어떻게 보내세요? 저는 조용한 카페에서 책 읽는 걸 좋아하는데요 😊"</div>
+        <div class="sc-tree">
+          <div class="sc-tree-top" style="width:34px;height:44px;"></div>
+          <div class="sc-tree-trunk" style="width:6px;height:14px;"></div>
+        </div>
+        <div style="flex:1"></div>
+        <div class="sc-tree">
+          <div class="sc-tree-top" style="width:38px;height:50px;"></div>
+          <div class="sc-tree-trunk" style="width:6px;height:16px;"></div>
+        </div>
+        <div class="sc-tree">
+          <div class="sc-tree-top" style="width:52px;height:68px;"></div>
+          <div class="sc-tree-trunk" style="width:8px;height:24px;"></div>
         </div>
       </div>
-
-      <!-- 신뢰도 인증 -->
-      <div class="feat-card fu" style="transition-delay:.2s">
-        <div class="feat-num">FEATURE 04</div>
-        <div class="feat-ico"><i class="ti ti-shield-check"></i></div>
-        <div class="feat-title">신뢰도 인증 시스템</div>
-        <div class="feat-desc">본인인증, 직장인증, 학력인증으로 신뢰도 점수를 쌓습니다. 프로필에 항상 표시되어 안전한 만남을 보장합니다.</div>
-        <div class="feat-tags"><span class="feat-tag">본인인증</span><span class="feat-tag">직장인증</span><span class="feat-tag">학력인증</span></div>
+      <!-- 커플 실루엣 -->
+      <div class="sc-couple">
+        <div class="sc-person sc-person-a">
+          <div class="sc-head" style="width:22px;height:22px;"></div>
+          <div class="sc-body" style="width:20px;height:48px;background:rgba(15,8,3,.82);border-radius:6px 6px 0 0;"></div>
+        </div>
+        <div class="sc-person sc-person-b">
+          <div class="sc-head" style="width:19px;height:19px;"></div>
+          <div class="sc-body" style="width:17px;height:42px;background:rgba(15,8,3,.75);border-radius:6px 6px 0 0;"></div>
+        </div>
+        <div class="sc-arm"></div>
       </div>
+      <!-- 땅 -->
+      <div class="sc-ground"></div>
+    </div>
+    <!-- 하단 페이드 -->
+    <div class="hv2-fade"></div>
+  </div>
+</section>
 
-      <!-- AI 인터뷰 -->
-      <div class="feat-card fu" style="transition-delay:.25s">
-        <div class="feat-num">FEATURE 05</div>
-        <div class="feat-ico"><i class="ti ti-microphone"></i></div>
-        <div class="feat-title">AI 인터뷰</div>
-        <div class="feat-desc">가입 시 AI가 직접 인터뷰합니다. 주말 취향, 여행 스타일, 결혼관, 연애 가치관까지 자연스러운 대화로 파악합니다.</div>
-        <div class="feat-tags"><span class="feat-tag">ChatGPT 스타일</span><span class="feat-tag">가치관 분석</span></div>
+
+<!-- ════════════════════════════════════════
+     2. WHY WENZI
+════════════════════════════════════════ -->
+<section class="why section" id="why">
+  <div class="why-grid con">
+    <div class="why-left fu">
+      <div class="sec-eyebrow">Why WENZI</div>
+      <h2 class="sec-h2">소개팅 앱이 아닙니다.<br><span class="em">AI Relationship<br>Manager입니다.</span></h2>
+      <p class="sec-p">많이 만나는 것이 목표가 아닙니다.<br>가장 잘 맞는 단 한 사람을 만나게 합니다.</p>
+      <div class="why-quote-block">
+        <div class="why-quote">"많이 만나는 것보다,<br>잘 맞는 한 사람."</div>
+        <div class="why-quote-sub">하루에 수백 명을 스와이프하는 경험을 없앴습니다. AI가 충분히 분석한 뒤, 오늘 가장 잘 맞는 단 한 명만 추천합니다.</div>
+      </div>
+    </div>
+    <div class="why-right">
+      <div class="why-card fu fu-d1">
+        <div class="why-card-top">
+          <div class="why-ico"><i class="ti ti-user-heart"></i></div>
+          <div class="why-card-title">하루 한 명 추천</div>
+        </div>
+        <div class="why-card-desc">무한 스와이프를 없앴습니다. AI가 하루에 가장 잘 맞는 단 한 명만 추천합니다. 신중한 한 번의 만남이 더 가치 있습니다.</div>
+      </div>
+      <div class="why-card fu fu-d2">
+        <div class="why-card-top">
+          <div class="why-ico"><i class="ti ti-brain"></i></div>
+          <div class="why-card-title">AI 가치관 분석</div>
+        </div>
+        <div class="why-card-desc">가입 시 AI 인터뷰를 통해 가치관, 생활패턴, 연애관을 깊이 이해합니다. 단순한 외모 매칭이 아닙니다.</div>
+      </div>
+      <div class="why-card fu fu-d3">
+        <div class="why-card-top">
+          <div class="why-ico"><i class="ti ti-shield-check"></i></div>
+          <div class="why-card-title">신뢰도 인증 시스템</div>
+        </div>
+        <div class="why-card-desc">본인·직장·학력 인증으로 신뢰할 수 있는 사람만 WENZI에 있습니다. 안전하고 진심 어린 만남을 약속합니다.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================================================================
-     USER FLOW
-================================================================ -->
-<section class="userflow section" id="flow">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">User Flow</div>
-      <h2 class="s-title">가입부터 매칭까지<br><span class="g">AI가 함께합니다</span></h2>
+
+<!-- ════════════════════════════════════════
+     3. 오늘의 인연
+════════════════════════════════════════ -->
+<section class="today section" id="today">
+  <div class="today-inner con">
+    <div class="today-left fu">
+      <div class="sec-eyebrow">Today's Match</div>
+      <h2 class="sec-h2">오늘 당신에게<br><span class="em">딱 한 명</span>이<br>기다립니다.</h2>
+      <p class="sec-p">AI가 당신과 가장 잘 맞는 한 사람을 엄선합니다.<br>내일이면 새로운 인연이 기다립니다.</p>
+      <div class="today-points">
+        <div class="today-pt fu fu-d1">
+          <div class="today-pt-ico"><i class="ti ti-heart"></i></div>
+          <div class="today-pt-text">
+            <strong>무료 — 하루 1명</strong>
+            AI가 엄선한 최고의 한 사람을 매일 추천합니다.
+          </div>
+        </div>
+        <div class="today-pt fu fu-d2">
+          <div class="today-pt-ico"><i class="ti ti-crown"></i></div>
+          <div class="today-pt-text">
+            <strong>Premium — 하루 최대 3명</strong>
+            더 많은 선택지, AI 상세 분석, 데이트 코스 추천까지.
+          </div>
+        </div>
+        <div class="today-pt fu fu-d3">
+          <div class="today-pt-ico"><i class="ti ti-clock"></i></div>
+          <div class="today-pt-text">
+            <strong>다음 추천까지 카운트다운</strong>
+            기다림이 설렘이 됩니다.
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="flow-steps fu" style="transition-delay:.05s">
-      <div class="fs-item active">
-        <div class="fs-circle"><i class="ti ti-user-plus"></i></div>
-        <div class="fs-title">회원가입</div>
-        <div class="fs-desc">기본 정보 입력</div>
-      </div>
-      <div class="fs-item active">
-        <div class="fs-circle"><i class="ti ti-shield-check"></i></div>
-        <div class="fs-title">본인인증</div>
-        <div class="fs-desc">직장·학력 인증</div>
-      </div>
-      <div class="fs-item active">
-        <div class="fs-circle"><i class="ti ti-heart"></i></div>
-        <div class="fs-title">취미·가치관</div>
-        <div class="fs-desc">생활패턴 입력</div>
-      </div>
-      <div class="fs-item active">
-        <div class="fs-circle"><i class="ti ti-microphone"></i></div>
-        <div class="fs-title">AI 인터뷰</div>
-        <div class="fs-desc">대화 스타일 분석</div>
-      </div>
-      <div class="fs-item active">
-        <div class="fs-circle"><i class="ti ti-sparkles"></i></div>
-        <div class="fs-title">AI 분석</div>
-        <div class="fs-desc">궁합 프로파일 완성</div>
-      </div>
-      <div class="fs-item active">
-        <div class="fs-circle"><i class="ti ti-calendar-heart"></i></div>
-        <div class="fs-title">오늘의 추천</div>
-        <div class="fs-desc">하루 1명 매칭</div>
+
+    <div class="fu fu-d2">
+      <div class="today-card">
+        <div class="tc-header">
+          <div class="tc-header-label">
+            <i class="ti ti-sparkles"></i> 오늘의 추천
+          </div>
+          <span class="tc-plan">Premium</span>
+        </div>
+        <div class="tc-photo">
+          <span>👩</span>
+          <div class="tc-photo-grad"></div>
+          <div class="tc-score">97% <i class="ti ti-heart" style="font-size:12px;color:var(--rose)"></i></div>
+          <div class="tc-name-row">
+            <div class="tc-name">소연 <span style="font-size:14px;font-weight:400;opacity:.8">27</span></div>
+            <div class="tc-meta"><i class="ti ti-map-pin" style="font-size:11px"></i> 서울 강남 · 간호사</div>
+          </div>
+        </div>
+        <div class="tc-body">
+          <div class="tc-trust">
+            <i class="ti ti-shield-check" style="font-size:14px"></i>
+            신뢰도 96점 · 본인·직장·학력 인증 완료
+          </div>
+          <div class="tc-tags">
+            <span class="tc-tag">여행</span>
+            <span class="tc-tag">카페</span>
+            <span class="tc-tag">영화</span>
+          </div>
+          <div class="tc-comment">
+            <strong>AI 코멘트</strong> — 두 분 모두 깊은 대화와 조용한 주말을 선호하는 성향이 97% 일치합니다.
+          </div>
+          <div class="tc-btns">
+            <button class="tc-btn-pass">오늘은 여기까지</button>
+            <button class="tc-btn-like"><i class="ti ti-heart" style="font-size:13px"></i> 관심 있어요</button>
+          </div>
+          <div class="tc-timer">⏱ 다음 추천까지 <strong id="timer" style="color:var(--rose)">18:42:30</strong></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================================================================
-     TODAY'S PICK
-================================================================ -->
-<section class="todaypick" id="today">
-  <div class="tp-inner con">
+
+<!-- ════════════════════════════════════════
+     4. AI DAILY LETTER
+════════════════════════════════════════ -->
+<section class="letter-sec section" id="letter">
+  <div class="letter-inner con">
+    <div class="letter-left fu">
+      <div class="sec-eyebrow">AI Daily Letter</div>
+      <h2 class="sec-h2" style="color:#fff">매일 아침,<br><span style="background:linear-gradient(135deg,rgba(255,143,163,.9),rgba(255,200,210,.8));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">AI의 편지가<br>도착합니다.</span></h2>
+      <p class="sec-p" style="color:rgba(255,255,255,.5)">오늘 추천과 함께 AI가 당신에게 맞춤 편지를 보내드려요. 어떻게 다가가면 좋을지, 어떤 이야기를 꺼내면 좋을지.</p>
+      <div class="letter-desc">
+        <strong>예시</strong><br><br>
+        "오늘 추천한 분은 당신처럼 대화를 천천히 이어가는 스타일입니다.<br>오늘은 좋아하는 <strong>여행 이야기를 먼저 꺼내보세요.</strong>"
+      </div>
+    </div>
+    <div class="fu fu-d2">
+      <div class="letter-card-demo">
+        <div class="lc-top"></div>
+        <div class="lc-body">
+          <div class="lc-header">
+            <div class="lc-ico">✉️</div>
+            <div class="lc-title">AI Daily Letter</div>
+            <div class="lc-date">2024.01.15 오전 9:00</div>
+          </div>
+          <div class="lc-text">
+            오늘 추천한 분은 <strong>당신처럼 대화를 천천히 이어가는 스타일</strong>입니다.<br><br>
+            서두르지 않아도 괜찮아요. 오늘은 좋아하는 <strong>여행 이야기를 먼저 꺼내보세요</strong>. 두 분 모두 제주도를 좋아한다는 공통점이 있거든요. ✈️
+          </div>
+          <div class="lc-chips">
+            <div class="lc-chip">오늘의 추천 보기</div>
+            <div class="lc-chip">대화 팁 더 보기</div>
+            <div class="lc-chip">데이트 코스 추천</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     5. AI 궁합
+════════════════════════════════════════ -->
+<section class="compat-sec section" id="compat">
+  <div class="compat-inner con">
     <div class="fu">
-      <div class="s-label">Today's Pick</div>
-      <h2 class="s-title">하루에 단 한 명,<br><span class="g">AI가 고른 인연</span></h2>
-      <p class="s-desc">
-        수백 명을 보는 것이 아닙니다.<br>
-        AI가 오늘 당신에게 가장 잘 맞는 단 한 명을 엄선합니다.<br>
-        <strong style="color:var(--ink-2)">신중한 한 번의 만남이 더 가치 있습니다.</strong>
-      </p>
+      <div class="sec-eyebrow">AI 궁합 분석</div>
+      <h2 class="sec-h2">왜 잘 맞는지<br><span class="em">AI가 설명합니다.</span></h2>
+      <p class="sec-p">단순한 점수가 아닙니다. 가치관, 생활패턴, 연락 스타일, 연애관 — 6가지 항목을 분석하고 이유까지 알려드립니다.</p>
       <div style="margin-top:32px;display:flex;flex-direction:column;gap:14px;">
         <div style="display:flex;align-items:center;gap:12px;font-size:15px;color:var(--ink-2);">
-          <div style="width:32px;height:32px;border-radius:8px;background:var(--p-ll);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-user-heart" style="color:var(--p);font-size:15px;"></i></div>
-          무료 회원 — 하루 1명 추천
+          <div style="width:32px;height:32px;border-radius:9px;background:var(--rose-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-heart-rate-monitor" style="color:var(--rose);font-size:16px;"></i></div>
+          6가지 항목 정밀 분석
         </div>
         <div style="display:flex;align-items:center;gap:12px;font-size:15px;color:var(--ink-2);">
-          <div style="width:32px;height:32px;border-radius:8px;background:var(--p);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-crown" style="color:#fff;font-size:15px;"></i></div>
-          Premium — 하루 최대 3명 추천
+          <div style="width:32px;height:32px;border-radius:9px;background:var(--rose-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-message-dots" style="color:var(--rose);font-size:16px;"></i></div>
+          왜 잘 맞는지 AI가 설명
         </div>
         <div style="display:flex;align-items:center;gap:12px;font-size:15px;color:var(--ink-2);">
-          <div style="width:32px;height:32px;border-radius:8px;background:#DCFCE7;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-clock" style="color:#15803D;font-size:15px;"></i></div>
-          다음 추천까지 카운트다운 타이머
+          <div style="width:32px;height:32px;border-radius:9px;background:var(--rose-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-coffee" style="color:var(--rose);font-size:16px;"></i></div>
+          첫 대화 & 데이트 코스 추천
         </div>
       </div>
     </div>
-
-    <div class="tp-right fu" style="transition-delay:.12s">
-      <div class="tp-card">
-        <div class="tp-header">
-          <div class="tp-header-left">
-            <i class="ti ti-sparkles" style="color:var(--p);font-size:15px;"></i>
-            오늘의 추천
-            <span class="tp-day">2024.01.15</span>
+    <div class="fu fu-d2">
+      <div class="compat-card">
+        <div class="cc-pair">
+          <div class="cc-av">🧑</div>
+          <span style="font-size:18px;color:var(--rose);">♥</span>
+          <div class="cc-av">👩</div>
+          <div class="cc-score-area">
+            <div class="cc-score-big">97<span style="font-size:20px;font-weight:400;background:none;-webkit-text-fill-color:var(--ink-4);">%</span></div>
+            <div class="cc-score-lbl">AI 궁합 점수</div>
           </div>
-          <span class="tp-plan">Premium</span>
         </div>
-        <div class="tp-profile">
-          <div class="tp-photo">👩‍⚕️</div>
+        <div class="cc-bars">
           <div>
-            <div class="tp-info-name">소연 <span style="font-size:14px;font-weight:400;color:var(--ink-3)">27</span></div>
-            <div class="tp-info-meta">서울 강남 · 간호사</div>
-            <div class="tp-trust">
-              <i class="ti ti-shield-check" style="font-size:13px;"></i>
-              신뢰도 96점
-            </div>
+            <div class="cc-bar-lbl"><span>가치관</span><span>98%</span></div>
+            <div class="cc-track"><div class="cc-fill" style="width:98%"></div></div>
           </div>
-        </div>
-        <div class="tp-match">
-          <div class="tp-match-top">
-            <div>
-              <div class="tp-match-score">97%</div>
-              <div class="tp-match-label">AI 궁합 점수</div>
-            </div>
-            <span class="badge badge-p" style="height:fit-content;align-self:flex-start;">최고 매칭</span>
-          </div>
-          <div class="tp-bars">
-            <div class="tp-bar-row">
-              <div class="tp-bar-lbl"><span>가치관</span><span>98%</span></div>
-              <div class="tp-bar-track"><div class="tp-bar-fill" style="width:98%"></div></div>
-            </div>
-            <div class="tp-bar-row">
-              <div class="tp-bar-lbl"><span>생활패턴</span><span>95%</span></div>
-              <div class="tp-bar-track"><div class="tp-bar-fill" style="width:95%"></div></div>
-            </div>
-            <div class="tp-bar-row">
-              <div class="tp-bar-lbl"><span>연락 스타일</span><span>96%</span></div>
-              <div class="tp-bar-track"><div class="tp-bar-fill" style="width:96%"></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="tp-comment">
-          <div class="tp-comment-label">AI 코멘트</div>
-          <div class="tp-comment-text">두 분 모두 조용한 주말을 선호하고, <strong>깊은 대화를 좋아하는 성향이 97% 일치</strong>합니다. 첫 만남은 서울숲 근처 브런치 카페를 추천드려요. ☕</div>
-        </div>
-        <div class="tp-actions">
-          <button class="tp-btn-like"><i class="ti ti-heart"></i> 관심 있어요</button>
-          <button class="tp-btn-pass">오늘은 여기까지</button>
-          <div class="tp-timer">
-            <i class="ti ti-clock" style="font-size:12px;"></i>
-            다음 추천까지 <strong id="countdown" style="color:var(--p);margin-left:3px;">18:42:30</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================
-     TRUST SYSTEM
-================================================================ -->
-<section class="trust" id="trust">
-  <div class="trust-inner con">
-    <div class="s-center fu">
-      <div class="s-label" style="color:var(--p3);">Trust System</div>
-      <h2 class="s-title" style="color:#fff;">안전하고 믿을 수 있는<br><span class="g">신뢰도 시스템</span></h2>
-      <p class="s-desc" style="color:rgba(255,255,255,.5);max-width:520px;margin:0 auto;">
-        아무나 만나지 않습니다. 신원·직장·학력 인증을 통해<br>신뢰할 수 있는 사람만 WENZI에 있습니다.
-      </p>
-    </div>
-
-    <div class="trust-grid" style="margin-top:64px;">
-      <div class="trust-card fu" style="transition-delay:.05s">
-        <div class="trust-ico"><i class="ti ti-id-badge"></i></div>
-        <div class="trust-title">본인인증 +30</div>
-        <div class="trust-desc">실명·생년월일 인증으로 허위 프로필을 차단합니다. 가입 즉시 진행 가능합니다.</div>
-      </div>
-      <div class="trust-card fu" style="transition-delay:.1s">
-        <div class="trust-ico"><i class="ti ti-building"></i></div>
-        <div class="trust-title">직장인증 +20</div>
-        <div class="trust-desc">명함, 사원증, 재직증명서 중 하나로 직장을 인증합니다. 공무원·대기업·전문직 표시.</div>
-      </div>
-      <div class="trust-card fu" style="transition-delay:.15s">
-        <div class="trust-ico"><i class="ti ti-school"></i></div>
-        <div class="trust-title">학력인증 +10</div>
-        <div class="trust-desc">졸업증명서 또는 재학증명서로 학력을 인증합니다. 선택 공개 가능합니다.</div>
-      </div>
-      <div class="trust-card fu" style="transition-delay:.2s">
-        <div class="trust-ico"><i class="ti ti-star"></i></div>
-        <div class="trust-title">이용후기 +20</div>
-        <div class="trust-desc">만남 후 상호 후기를 작성합니다. 시간약속, 예의, 사진 동일 여부를 평가합니다.</div>
-      </div>
-      <div class="trust-card fu" style="transition-delay:.25s">
-        <div class="trust-ico"><i class="ti ti-activity"></i></div>
-        <div class="trust-title">최근 활동 +10</div>
-        <div class="trust-desc">꾸준히 활동하는 회원에게 추가 점수를 부여합니다. 유령 회원을 걸러냅니다.</div>
-      </div>
-      <div class="trust-card fu" style="transition-delay:.3s">
-        <div class="trust-ico" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.15);"><i class="ti ti-alert-triangle" style="color:#EF4444;"></i></div>
-        <div class="trust-title">노쇼/신고 감점</div>
-        <div class="trust-desc">노쇼 -30점, 신고 누적 -50점. 신뢰도가 낮은 회원은 매칭에서 제외됩니다.</div>
-      </div>
-    </div>
-
-    <div class="trust-score-demo fu" style="transition-delay:.1s;margin-top:40px;">
-      <div class="tsd-left">
-        <div class="tsd-num">96</div>
-        <div class="tsd-label">신뢰도 점수</div>
-      </div>
-      <div class="tsd-right">
-        <div class="tsd-item">
-          <div class="tsd-item-label" style="color:rgba(255,255,255,.6);">본인인증</div>
-          <div class="tsd-track"><div class="tsd-fill green" style="width:100%"></div></div>
-          <div class="tsd-val">+30</div>
-        </div>
-        <div class="tsd-item">
-          <div class="tsd-item-label" style="color:rgba(255,255,255,.6);">직장인증</div>
-          <div class="tsd-track"><div class="tsd-fill blue" style="width:100%"></div></div>
-          <div class="tsd-val">+20</div>
-        </div>
-        <div class="tsd-item">
-          <div class="tsd-item-label" style="color:rgba(255,255,255,.6);">학력인증</div>
-          <div class="tsd-track"><div class="tsd-fill purple" style="width:100%"></div></div>
-          <div class="tsd-val">+10</div>
-        </div>
-        <div class="tsd-item">
-          <div class="tsd-item-label" style="color:rgba(255,255,255,.6);">이용후기</div>
-          <div class="tsd-track"><div class="tsd-fill amber" style="width:90%"></div></div>
-          <div class="tsd-val">+18</div>
-        </div>
-        <div class="tsd-item">
-          <div class="tsd-item-label" style="color:rgba(255,255,255,.6);">최근활동</div>
-          <div class="tsd-track"><div class="tsd-fill green" style="width:80%"></div></div>
-          <div class="tsd-val">+8</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================
-     PREMIUM
-================================================================ -->
-<section class="premium section" id="premium">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">Premium</div>
-      <h2 class="s-title">더 많은 인연을 만날<br><span class="g">준비가 됐나요?</span></h2>
-      <p class="s-desc">무료로 시작하고, 더 나은 경험을 원할 때 업그레이드하세요.</p>
-    </div>
-
-    <div class="plans-wrap">
-      <div class="plan-card fu" style="transition-delay:.05s">
-        <div class="plan-name">무료</div>
-        <div class="plan-price">₩0<sub>/월</sub></div>
-        <div class="plan-divider"></div>
-        <div class="plan-feats">
-          <div class="plan-feat"><i class="ti ti-check"></i>하루 1명 추천</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>AI 궁합 점수 확인</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>기본 채팅</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>신뢰도 인증</div>
-          <div class="plan-feat off"><i class="ti ti-x"></i>AI 상세 분석 리포트</div>
-          <div class="plan-feat off"><i class="ti ti-x"></i>AI 데이트 추천</div>
-          <div class="plan-feat off"><i class="ti ti-x"></i>AI 대화 코치</div>
-        </div>
-        <button class="plan-btn">무료로 시작</button>
-      </div>
-
-      <div class="plan-card featured fu" style="transition-delay:.1s">
-        <div class="plan-pop">가장 인기 ✨</div>
-        <div class="plan-name">Premium</div>
-        <div class="plan-price">₩9,900<sub>/월</sub></div>
-        <div class="plan-divider"></div>
-        <div class="plan-feats">
-          <div class="plan-feat"><i class="ti ti-check"></i>하루 최대 3명 추천</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>AI 상세 궁합 분석</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>AI 데이트 코스 추천</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>AI 대화 코치</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>우선 노출</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>Premium 뱃지</div>
-          <div class="plan-feat"><i class="ti ti-check"></i>광고 없음</div>
-        </div>
-        <button class="plan-btn">Premium 시작</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ================================================================
-     AI COMPANION FEATURES
-================================================================ -->
-
-<!-- 1. AI Daily Letter -->
-<section class="ai-comp gray-bg" id="daily-letter">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">AI Daily Letter</div>
-      <h2 class="s-title">매일 아침,<br><span class="g">AI의 편지가 도착합니다</span></h2>
-      <p class="s-desc">오늘의 추천과 함께 AI가 당신에게 맞춤형 편지를 보내드려요.<br>어떻게 다가가면 좋을지, 어떤 이야기를 꺼내면 좋을지 알려드립니다.</p>
-    </div>
-    <div class="dl-card fu" style="transition-delay:.08s">
-      <div class="dl-header">
-        <div class="dl-ico"><i class="ti ti-mail-heart"></i></div>
-        <div class="dl-label">AI Daily Letter</div>
-        <div class="dl-date">2024년 1월 15일 월요일</div>
-      </div>
-      <div class="dl-body">
-        오늘 추천한 분은 <strong>당신처럼 대화를 천천히 이어가는 스타일</strong>입니다.<br>
-        서두르지 않아도 괜찮아요. 오늘은 좋아하는 <strong>여행 이야기를 먼저 꺼내보세요</strong>.<br>
-        두 분 모두 조용한 여행을 좋아한다는 공통점이 있거든요. ✈️
-      </div>
-      <div class="dl-actions">
-        <div class="dl-chip"><i class="ti ti-sparkles" style="font-size:11px"></i> 오늘의 추천 보기</div>
-        <div class="dl-chip">대화 팁 더 보기</div>
-        <div class="dl-dots">
-          <div class="dl-dot on"></div>
-          <div class="dl-dot"></div>
-          <div class="dl-dot"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 2. AI Relationship Timeline -->
-<section class="ai-comp" id="timeline">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">AI Relationship Timeline</div>
-      <h2 class="s-title">관계의 모든 순간을<br><span class="g">AI가 함께 기록합니다</span></h2>
-      <p class="s-desc">매칭 순간부터 100일까지, AI가 자동으로 관계 타임라인을 만들고<br>지금 단계에 맞는 행동을 추천해드립니다.</p>
-    </div>
-    <div class="rt-wrap fu" style="transition-delay:.08s">
-      <div class="rt-track">
-        <div class="rt-step">
-          <div class="rt-circle done"><i class="ti ti-heart"></i></div>
-          <div class="rt-label">매칭</div>
-          <div class="rt-date">01.10</div>
-        </div>
-        <div class="rt-step">
-          <div class="rt-circle done"><i class="ti ti-message-circle"></i></div>
-          <div class="rt-label">첫 인사</div>
-          <div class="rt-date">01.10</div>
-        </div>
-        <div class="rt-step">
-          <div class="rt-circle done"><i class="ti ti-phone"></i></div>
-          <div class="rt-label">첫 통화</div>
-          <div class="rt-date">01.13</div>
-        </div>
-        <div class="rt-step">
-          <div class="rt-circle now"><i class="ti ti-coffee"></i></div>
-          <div class="rt-label">첫 만남</div>
-          <div class="rt-sub">다음 단계</div>
-        </div>
-        <div class="rt-step">
-          <div class="rt-circle next"><i class="ti ti-calendar"></i></div>
-          <div class="rt-label">30일</div>
-          <div class="rt-sub">D+15 예상</div>
-        </div>
-        <div class="rt-step">
-          <div class="rt-circle next"><i class="ti ti-confetti"></i></div>
-          <div class="rt-label">100일</div>
-          <div class="rt-sub">D+85 예상</div>
-        </div>
-      </div>
-      <div class="rt-ai-tip">
-        <i class="ti ti-sparkles"></i>
-        <span><strong>AI 추천</strong> — 대화가 5일째 이어지고 있어요. 슬슬 첫 만남을 제안할 적기입니다. 주말 브런치를 제안해보세요 ☕</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 3. Relationship Health -->
-<section class="ai-comp gray-bg" id="health">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">AI Relationship Health</div>
-      <h2 class="s-title">지금 두 사람의<br><span class="g">관계 상태는?</span></h2>
-      <p class="s-desc">AI가 대화 패턴, 응답 속도, 감정 톤을 분석하여<br>현재 관계 건강 상태를 실시간으로 알려드립니다.</p>
-    </div>
-    <div class="rh-grid">
-      <div class="rh-card fu" style="transition-delay:.05s">
-        <div class="rh-card-top">
-          <div class="rh-ico"><i class="ti ti-heart-rate-monitor"></i></div>
-          <div class="rh-status good">좋음</div>
-        </div>
-        <div class="rh-score">92<span style="font-size:20px;font-weight:400;color:var(--ink-4)">%</span></div>
-        <div class="rh-score-lbl">관계 건강 점수</div>
-        <div class="rh-track"><div class="rh-fill" style="width:92%"></div></div>
-        <div class="rh-rec"><strong>AI 추천</strong> — 이번 주말 만남을 제안해보세요. 대화 호흡이 매우 잘 맞고 있어요.</div>
-      </div>
-      <div class="rh-card fu" style="transition-delay:.1s">
-        <div class="rh-card-top">
-          <div class="rh-ico" style="background:#FEF3C7;"><i class="ti ti-message-dots" style="color:#D97706;"></i></div>
-          <div class="rh-status warn">주의 필요</div>
-        </div>
-        <div class="rh-score" style="color:#D97706;">61<span style="font-size:20px;font-weight:400;color:var(--ink-4)">%</span></div>
-        <div class="rh-score-lbl">대화 활성도</div>
-        <div class="rh-track"><div class="rh-fill" style="width:61%;background:linear-gradient(90deg,#F59E0B,#FCD34D);"></div></div>
-        <div class="rh-rec" style="background:#FEF3C7;border:1px solid #FDE68A;"><strong style="color:#D97706;">AI 알림</strong> — 최근 응답이 느려졌어요. 가벼운 질문으로 대화를 다시 시작해보세요.</div>
-      </div>
-      <div class="rh-card fu" style="transition-delay:.15s">
-        <div class="rh-card-top">
-          <div class="rh-ico" style="background:#DCFCE7;"><i class="ti ti-trending-up" style="color:#15803D;"></i></div>
-          <div class="rh-status good">발전 중</div>
-        </div>
-        <div class="rh-score" style="color:#15803D;">78<span style="font-size:20px;font-weight:400;color:var(--ink-4)">%</span></div>
-        <div class="rh-score-lbl">관계 발전 가능성</div>
-        <div class="rh-track"><div class="rh-fill" style="width:78%;background:linear-gradient(90deg,#22C55E,#86EFAC);"></div></div>
-        <div class="rh-rec" style="background:#DCFCE7;border:1px solid #86EFAC;"><strong style="color:#15803D;">AI 코멘트</strong> — 지난주 대비 대화 길이가 23% 증가했어요. 좋은 신호예요 🌱</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 4. AI First Date Planner -->
-<section class="ai-comp" id="date-planner">
-  <div class="fdp-inner con">
-    <div class="fu">
-      <div class="s-label">AI First Date Planner</div>
-      <h2 class="s-title">AI가 설계하는<br><span class="g">완벽한 첫 데이트</span></h2>
-      <p class="s-desc">공통 관심사, 거리, 예산, 날씨, 취향을 모두 분석해<br>두 사람에게 딱 맞는 데이트 코스를 추천해드립니다.</p>
-      <div class="fdp-steps" style="margin-top:32px;">
-        <div class="fdp-step on">
-          <div class="fdp-step-ico">☕</div>
           <div>
-            <div class="fdp-step-name">브런치</div>
-            <div class="fdp-step-place">성수동 어니언 · 11:00 AM</div>
-            <div class="fdp-step-tags"><span class="fdp-stag">도보 5분</span><span class="fdp-stag">₩25,000</span></div>
+            <div class="cc-bar-lbl"><span>생활패턴</span><span>95%</span></div>
+            <div class="cc-track"><div class="cc-fill" style="width:95%"></div></div>
           </div>
-        </div>
-        <div class="fdp-connector"></div>
-        <div class="fdp-step">
-          <div class="fdp-step-ico">🌿</div>
           <div>
-            <div class="fdp-step-name">서울숲 산책</div>
-            <div class="fdp-step-place">서울숲 공원 · 1:00 PM</div>
-            <div class="fdp-step-tags"><span class="fdp-stag">도보 10분</span><span class="fdp-stag">무료</span></div>
+            <div class="cc-bar-lbl"><span>연락 스타일</span><span>96%</span></div>
+            <div class="cc-track"><div class="cc-fill" style="width:96%"></div></div>
           </div>
-        </div>
-        <div class="fdp-connector"></div>
-        <div class="fdp-step">
-          <div class="fdp-step-ico">📷</div>
           <div>
-            <div class="fdp-step-name">감성 카페</div>
-            <div class="fdp-step-place">성수 루프탑 카페 · 3:30 PM</div>
-            <div class="fdp-step-tags"><span class="fdp-stag">도보 7분</span><span class="fdp-stag">₩18,000</span></div>
+            <div class="cc-bar-lbl"><span>연애관</span><span>94%</span></div>
+            <div class="cc-track"><div class="cc-fill" style="width:94%"></div></div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="fu" style="transition-delay:.12s">
-      <div class="fdp-summary">
-        <div class="fdp-summ-title">AI 분석 기준</div>
-        <div class="fdp-factors">
-          <div class="fdp-factor"><div class="fdp-fac-ico">🎯</div>공통 관심사<div class="fdp-fac-val">카페·자연</div></div>
-          <div class="fdp-factor"><div class="fdp-fac-ico">📍</div>거리<div class="fdp-fac-val">중간 지점</div></div>
-          <div class="fdp-factor"><div class="fdp-fac-ico">💰</div>예산<div class="fdp-fac-val">₩50,000 이내</div></div>
-          <div class="fdp-factor"><div class="fdp-fac-ico">☀️</div>날씨<div class="fdp-fac-val">맑음 · 12°C</div></div>
-          <div class="fdp-factor"><div class="fdp-fac-ico">💫</div>분위기<div class="fdp-fac-val">감성·여유</div></div>
-        </div>
-        <div class="fdp-total">
-          <div class="fdp-total-lbl">예상 총 시간</div>
-          <div class="fdp-total-val">약 5시간 · ₩43,000</div>
+        <div class="cc-insight">
+          <strong>AI 분석</strong> — 두 분은 조용한 주말을 좋아하고 깊은 대화를 선호하는 점이 강하게 일치합니다. 첫 데이트로 서울숲 브런치를 추천드려요. ☕
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 5. Conversation Coach -->
-<section class="ai-comp gray-bg" id="coach">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">AI Conversation Coach</div>
-      <h2 class="s-title">대화가 끊겼을 때<br><span class="g">AI가 도와드립니다</span></h2>
-      <p class="s-desc">어색한 침묵이 찾아와도 걱정 없어요.<br>AI가 상황에 맞는 자연스러운 질문을 실시간으로 추천해드립니다.</p>
-    </div>
-    <div class="cc-wrap fu" style="transition-delay:.08s">
-      <div class="cc-header">
-        <div class="cc-av">👩‍⚕️</div>
-        <div>
-          <div class="cc-name">소연</div>
-          <div class="cc-online">온라인</div>
-        </div>
-      </div>
-      <div class="cc-msgs">
-        <div class="cc-bbl them">안녕하세요! 오늘 날씨가 좋네요 😊</div>
-        <div class="cc-bbl me">그러게요! 이런 날엔 나가고 싶어지더라고요</div>
-        <div class="cc-bbl them">맞아요, 저는 오늘 잠깐 산책했는데 기분이 너무 좋더라고요</div>
-        <div class="cc-typing"><span></span><span></span><span></span></div>
-      </div>
-      <div class="cc-sug-area">
-        <div class="cc-sug-lbl">
-          <i class="ti ti-sparkles" style="font-size:13px;"></i>
-          AI 대화 추천 — 지금 이 질문을 해보세요
-        </div>
-        <div class="cc-sug-chips">
-          <div class="cc-chip"><i class="ti ti-plane"></i>올해 가장 가보고 싶은 여행지가 어디예요?</div>
-          <div class="cc-chip"><i class="ti ti-sun"></i>이런 날 가장 좋아하는 것은 뭐예요?</div>
-          <div class="cc-chip"><i class="ti ti-music"></i>요즘 자주 듣는 음악이 있으세요?</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- 7 + 8. Love Diary + Weekly Report -->
-<section class="ai-comp" id="diary">
+<!-- ════════════════════════════════════════
+     6. 후기
+════════════════════════════════════════ -->
+<section class="reviews-sec section" id="reviews">
   <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">AI Love Diary · Weekly Report</div>
-      <h2 class="s-title">AI가 기록하는<br><span class="g">우리의 이야기</span></h2>
-      <p class="s-desc">매일 밤 AI가 오늘의 대화를 요약하고, 매주 관계 리포트를 자동으로 만들어드립니다.</p>
+    <div class="sec-center fu">
+      <div class="sec-eyebrow">Real Stories</div>
+      <h2 class="sec-h2">실제로 만난<br><span class="em">WENZI 커플</span></h2>
     </div>
-    <div class="dr-grid">
-      <div class="diary-card fu" style="transition-delay:.05s">
-        <div class="diary-bg"></div>
-        <div class="diary-date"><i class="ti ti-book" style="font-size:13px;"></i> 2024년 1월 15일 · AI Love Diary</div>
-        <div class="diary-head">오늘의 대화 요약</div>
-        <div class="diary-entries">
-          <div class="diary-entry">
-            <div class="diary-entry-ico">💬</div>
-            <div class="diary-entry-txt">오늘 처음으로 <strong>여행 이야기</strong>를 나누었습니다. 두 분 모두 제주도를 좋아한다는 것을 알았어요.</div>
-          </div>
-          <div class="diary-entry">
-            <div class="diary-entry-ico">📈</div>
-            <div class="diary-entry-txt">대화는 지난주보다 <strong>18% 더 자연스러워졌습니다</strong>. 응답 속도도 빨라졌어요.</div>
-          </div>
-          <div class="diary-entry">
-            <div class="diary-entry-ico">💡</div>
-            <div class="diary-entry-txt">다음에는 <strong>좋아하는 음악</strong> 이야기를 꺼내보세요. 관심사가 겹칠 가능성이 높아요.</div>
-          </div>
-        </div>
-      </div>
-      <div class="report-card fu" style="transition-delay:.1s">
-        <div class="report-week">2024년 1월 2주차 · Weekly Report</div>
-        <div class="report-head">이번 주 관계 리포트</div>
-        <div class="report-stats">
-          <div class="rstat"><div class="rstat-n">47</div><div class="rstat-l">총 대화 수</div></div>
-          <div class="rstat"><div class="rstat-n">+3</div><div class="rstat-l">공통 관심사 발견</div></div>
-          <div class="rstat"><div class="rstat-n">92%</div><div class="rstat-l">관계 건강도</div></div>
-          <div class="rstat"><div class="rstat-n">↑18%</div><div class="rstat-l">대화 자연스러움</div></div>
-        </div>
-        <div class="report-fb"><strong>AI 피드백</strong> — 이번 주 대화량이 전주 대비 32% 증가했어요. 관계가 빠르게 발전하고 있습니다. 슬슬 첫 만남을 제안할 적기예요 ☕</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 9. AI Red Flag Detection -->
-<section class="ai-comp gray-bg" id="redflag">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">AI Red Flag Detection</div>
-      <h2 class="s-title">안전한 만남을 위한<br><span class="g">AI 신호 감지</span></h2>
-      <p class="s-desc">후기, 신뢰도, 노쇼 이력, 답장 패턴을 종합 분석하여<br>주의가 필요한 사용자를 사전에 알려드립니다.</p>
-    </div>
-    <div class="rf-list">
-      <div class="rf-card fu" style="transition-delay:.05s">
-        <div class="rf-ico safe">✅</div>
-        <div style="flex:1;">
-          <div class="rf-tag safe">매우 안전</div>
-          <div class="rf-title">소연님 · 신뢰도 96점</div>
-          <div class="rf-desc">본인·직장·학력 인증 완료 · 이용후기 100% 긍정 · 노쇼 없음</div>
-        </div>
-        <div class="rf-score-area"><div class="rf-score-n safe">96</div><div class="rf-score-lbl">신뢰 점수</div></div>
-      </div>
-      <div class="rf-card fu" style="transition-delay:.1s">
-        <div class="rf-ico warn">⚠️</div>
-        <div style="flex:1;">
-          <div class="rf-tag warn">주의</div>
-          <div class="rf-title">익명 사용자 · 신뢰도 42점</div>
-          <div class="rf-desc">약속 변경이 잦습니다 · 응답 패턴 불규칙 · 프로필 미완성</div>
-        </div>
-        <div class="rf-score-area"><div class="rf-score-n warn">42</div><div class="rf-score-lbl">신뢰 점수</div></div>
-      </div>
-      <div class="rf-card fu" style="transition-delay:.15s">
-        <div class="rf-ico danger">🚫</div>
-        <div style="flex:1;">
-          <div class="rf-tag danger">위험</div>
-          <div class="rf-title">신고 누적 사용자</div>
-          <div class="rf-desc">신고 3건 접수 · 노쇼 이력 2회 · 신원 미인증 · 매칭 제한됨</div>
-        </div>
-        <div class="rf-score-area"><div class="rf-score-n danger">12</div><div class="rf-score-lbl">신뢰 점수</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 10. AI Memory Timeline -->
-<section class="ai-comp" id="memory">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">AI Memory Timeline</div>
-      <h2 class="s-title">AI가 기억하는<br><span class="g">소중한 순간들</span></h2>
-      <p class="s-desc">첫 만남, 첫 데이트, 기념일… AI가 중요한 순간을 기억하고<br>선물 아이디어까지 함께 제안해드립니다.</p>
-    </div>
-    <div class="mt-wrap fu" style="transition-delay:.08s">
-      <div class="mt-item">
-        <div class="mt-card">
-          <div class="mt-top"><div class="mt-dt">2024.01.10</div><div class="mt-type">매칭</div></div>
-          <div class="mt-text">소연님과 처음 매칭됐어요. AI 궁합 점수 <strong>97%</strong>의 특별한 만남이었습니다. 💜</div>
-        </div>
-      </div>
-      <div class="mt-item">
-        <div class="mt-card">
-          <div class="mt-top"><div class="mt-dt">2024.01.13</div><div class="mt-type">발견</div></div>
-          <div class="mt-text">두 분 모두 <strong>제주도 여행</strong>을 좋아한다는 것을 알게 됐어요. ✈️</div>
-        </div>
-      </div>
-      <div class="mt-item">
-        <div class="mt-card">
-          <div class="mt-top"><div class="mt-dt">2024.01.18</div><div class="mt-type">첫 만남</div></div>
-          <div class="mt-text">성수동 카페에서 <strong>첫 만남</strong>이 있었어요. 예정 시간보다 1시간 더 있었습니다. ☕</div>
-        </div>
-      </div>
-      <div class="mt-item">
-        <div class="mt-card">
-          <div class="mt-top"><div class="mt-dt">2024.02.18</div><div class="mt-type">30일 기념</div></div>
-          <div class="mt-text">매칭 후 30일이 됐어요. <strong>AI 선물 추천</strong> — 제주도 여행 소품이 어떨까요? 🎁</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================
-     REVIEWS
-================================================================ -->
-<section class="reviews" id="reviews">
-  <div class="con">
-    <div class="s-center fu">
-      <div class="s-label">Reviews</div>
-      <h2 class="s-title">실제로 만난<br><span class="g">WENZI 커플</span></h2>
-    </div>
-
     <div class="reviews-grid">
-      <div class="rv-card fu" style="transition-delay:.05s">
+      <div class="rv fu fu-d1">
         <div class="rv-stars"><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i></div>
-        <div class="rv-quote">하루에 한 명만 추천해주는 게 처음엔 이상했는데, 그 한 명이 진짜 딱 맞는 사람이었어요. 지금 4개월째 잘 만나고 있습니다.</div>
+        <div class="rv-body">하루에 한 명만 추천해주는 게 처음엔 이상했는데, 그 한 명이 진짜 딱 맞는 사람이었어요. 지금 4개월째 잘 만나고 있습니다.</div>
         <div class="rv-author">
           <div class="rv-av">👩</div>
           <div>
@@ -1437,10 +1268,9 @@ button{font-family:var(--sans);cursor:pointer;}
           </div>
         </div>
       </div>
-
-      <div class="rv-card fu" style="transition-delay:.1s">
+      <div class="rv fu fu-d2">
         <div class="rv-stars"><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i></div>
-        <div class="rv-quote">다른 앱은 너무 많은 사람을 봐서 피곤했어요. WENZI는 AI가 골라준 한 명만 집중해서 보니까 훨씬 진지하게 만날 수 있었어요.</div>
+        <div class="rv-body">다른 앱은 너무 많은 사람을 봐서 피곤했어요. WENZI는 AI가 골라준 한 명만 집중해서 보니까 훨씬 진지하게 만날 수 있었어요.</div>
         <div class="rv-author">
           <div class="rv-av">👨</div>
           <div>
@@ -1450,10 +1280,9 @@ button{font-family:var(--sans);cursor:pointer;}
           </div>
         </div>
       </div>
-
-      <div class="rv-card fu" style="transition-delay:.15s">
+      <div class="rv fu fu-d3">
         <div class="rv-stars"><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i></div>
-        <div class="rv-quote">AI 인터뷰가 인상적이었어요. 그냥 체크박스가 아니라 진짜 대화하듯 물어봐서 저도 모르던 제 연애 스타일을 알게 됐어요.</div>
+        <div class="rv-body">AI 인터뷰가 인상적이었어요. 진짜 대화하듯 물어봐서 저도 모르던 제 연애 스타일을 알게 됐어요.</div>
         <div class="rv-author">
           <div class="rv-av">👩</div>
           <div>
@@ -1467,62 +1296,166 @@ button{font-family:var(--sans);cursor:pointer;}
   </div>
 </section>
 
-<!-- ================================================================
-     CTA
-================================================================ -->
-<section class="ctabanner">
-  <div class="cta-orb co1"></div>
-  <div class="cta-orb co2"></div>
-  <div class="cta-in fu">
-    <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);margin-bottom:24px;">
-      <span class="live-dot"></span>
-      지금 베타 가입 중
-    </span>
-    <h2 class="cta-title">오늘,<br>당신의 인연이 기다립니다.</h2>
-    <p class="cta-desc">
-      AI가 당신의 가치관을 분석하고<br>
-      가장 잘 맞는 한 사람을 찾아드립니다.
-    </p>
-    <div class="cta-btns">
-      <a href="#" class="btn btn-white btn-xl">
-        <i class="ti ti-sparkles"></i> 무료로 시작하기
-      </a>
-      <a href="#premium" class="btn btn-xl" style="background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.25);">
-        Premium 알아보기
-      </a>
+
+<!-- ════════════════════════════════════════
+     7. PREMIUM
+════════════════════════════════════════ -->
+<section class="premium-sec section" id="premium">
+  <div class="con">
+    <div class="sec-center fu">
+      <div class="sec-eyebrow">Premium</div>
+      <h2 class="sec-h2">나에게 맞는<br><span class="em">플랜을 선택하세요</span></h2>
+      <p class="sec-p">무료로 시작하고, 더 나은 경험을 원할 때 업그레이드하세요.</p>
     </div>
+    <div class="plans">
+      <div class="plan fu fu-d1">
+        <div class="plan-name">무료</div>
+        <div class="plan-price">₩0<sub>/월</sub></div>
+        <div class="plan-div"></div>
+        <div class="plan-feats">
+          <div class="plan-feat"><i class="ti ti-check"></i>하루 1명 추천</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>AI 궁합 점수 확인</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>기본 채팅</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>신뢰도 인증</div>
+          <div class="plan-feat off"><i class="ti ti-x"></i>AI 상세 분석</div>
+          <div class="plan-feat off"><i class="ti ti-x"></i>AI 데이트 코스</div>
+        </div>
+        <button class="plan-btn">무료로 시작</button>
+      </div>
+      <div class="plan featured fu fu-d2">
+        <div class="plan-pop">가장 인기 ✨</div>
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">₩9,900<sub>/월</sub></div>
+        <div class="plan-div"></div>
+        <div class="plan-feats">
+          <div class="plan-feat"><i class="ti ti-check"></i>하루 최대 3명 추천</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>AI 상세 궁합 분석</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>AI 데이트 코스 추천</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>AI 대화 코치</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>나를 좋아한 사람 보기</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>광고 없음</div>
+        </div>
+        <button class="plan-btn">Premium 시작</button>
+      </div>
+      <div class="plan fu fu-d3">
+        <div class="plan-name">VIP</div>
+        <div class="plan-price">₩19,900<sub>/월</sub></div>
+        <div class="plan-div"></div>
+        <div class="plan-feats">
+          <div class="plan-feat"><i class="ti ti-check"></i>Premium 모든 기능</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>프로필 부스트 2회/월</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>우선 매칭 노출</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>VIP 전용 뱃지</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>AI 심층 리포트</div>
+          <div class="plan-feat"><i class="ti ti-check"></i>AI Love Diary</div>
+        </div>
+        <button class="plan-btn">VIP 시작</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     8. FAQ
+════════════════════════════════════════ -->
+<section class="faq-sec section" id="faq">
+  <div class="con">
+    <div class="sec-center fu">
+      <div class="sec-eyebrow">FAQ</div>
+      <h2 class="sec-h2">자주 묻는 질문</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item fu fu-d1">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          하루에 한 명만 추천받는 건가요?
+          <i class="ti ti-plus"></i>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">무료 회원은 하루 1명, Premium 이상은 하루 최대 3명을 추천받습니다. AI가 충분히 분석한 뒤 가장 잘 맞는 분을 엄선하기 때문에, 적은 수지만 매칭 품질은 업계 최고 수준입니다.</div>
+        </div>
+      </div>
+      <div class="faq-item fu fu-d1">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          AI 인터뷰는 어떻게 진행되나요?
+          <i class="ti ti-plus"></i>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">가입 후 AI가 채팅 형식으로 질문을 드립니다. 주말 취향, 여행 스타일, 결혼관, 연애 가치관 등 10~15가지 질문에 자연스럽게 답변하시면 됩니다. 약 5~10분 정도 소요됩니다.</div>
+        </div>
+      </div>
+      <div class="faq-item fu fu-d2">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          신뢰도 인증은 필수인가요?
+          <i class="ti ti-plus"></i>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">본인인증은 필수입니다. 직장·학력 인증은 선택이지만, 인증할수록 신뢰도 점수가 높아져 더 좋은 매칭 기회를 얻을 수 있습니다. WENZI는 안전한 만남을 최우선으로 합니다.</div>
+        </div>
+      </div>
+      <div class="faq-item fu fu-d2">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          구독은 언제든지 취소할 수 있나요?
+          <i class="ti ti-plus"></i>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">네, 언제든지 취소 가능합니다. 구독 취소 후에도 구독 기간이 끝날 때까지 Premium 혜택을 이용하실 수 있습니다.</div>
+        </div>
+      </div>
+      <div class="faq-item fu fu-d3">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          어떤 연령대가 주로 사용하나요?
+          <i class="ti ti-plus"></i>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">주로 25~38세 직장인이 많이 사용합니다. 진지한 만남을 원하는 분들이 중심이며, WENZI는 신중하고 가치관이 맞는 만남을 추구하는 모든 성인을 환영합니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     CTA BANNER
+════════════════════════════════════════ -->
+<section class="cta-banner">
+  <div class="cta-inner fu">
+    <h2 class="cta-h2">오늘, 당신의<br>인연이 기다립니다.</h2>
+    <p class="cta-p">AI가 당신의 가치관을 분석하고<br>가장 잘 맞는 한 사람을 찾아드립니다.</p>
+    <button class="cta-btn" onclick="location.href='#'">무료로 시작하기</button>
     <div class="cta-note">신용카드 불필요 · 언제든 탈퇴 가능 · 가입 후 24시간 내 첫 추천</div>
   </div>
 </section>
 
-<!-- ================================================================
+
+<!-- ════════════════════════════════════════
      FOOTER
-================================================================ -->
+════════════════════════════════════════ -->
 <footer class="footer">
   <div class="footer-in">
     <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <img src="logo.png" alt="WENZI" onerror="this.outerHTML='<span style=\'font-size:16px;font-weight:900;color:#fff;letter-spacing:2px;opacity:.85\'>WENZI</span>'">
-        </div>
+      <div>
+        <img src="logo.png" alt="WENZI" class="footer-logo-img"
+          onerror="this.outerHTML='<div class=\'footer-logo-txt\'>WENZI</div>'">
         <div class="footer-tagline">많이 만나는 것보다,<br>잘 맞는 한 사람.<br>AI Relationship Platform.</div>
-        <div class="footer-socials">
+        <div class="footer-socs">
           <div class="footer-soc"><i class="ti ti-brand-instagram"></i></div>
           <div class="footer-soc"><i class="ti ti-brand-twitter"></i></div>
           <div class="footer-soc"><i class="ti ti-brand-youtube"></i></div>
         </div>
       </div>
       <div>
-        <div class="footer-col-title">서비스</div>
+        <div class="footer-col-t">서비스</div>
         <div class="footer-links">
-          <a class="footer-lk" href="#how">서비스 소개</a>
-          <a class="footer-lk" href="#features">AI 기능</a>
-          <a class="footer-lk" href="#trust">신뢰도 시스템</a>
+          <a class="footer-lk" href="#why">왜 WENZI인가</a>
+          <a class="footer-lk" href="#today">오늘의 인연</a>
           <a class="footer-lk" href="#premium">요금제</a>
+          <a class="footer-lk" href="#faq">FAQ</a>
         </div>
       </div>
       <div>
-        <div class="footer-col-title">회사</div>
+        <div class="footer-col-t">회사</div>
         <div class="footer-links">
           <a class="footer-lk">회사 소개</a>
           <a class="footer-lk">채용</a>
@@ -1531,7 +1464,7 @@ button{font-family:var(--sans);cursor:pointer;}
         </div>
       </div>
       <div>
-        <div class="footer-col-title">약관</div>
+        <div class="footer-col-t">약관</div>
         <div class="footer-links">
           <a class="footer-lk">이용약관</a>
           <a class="footer-lk">개인정보처리방침</a>
@@ -1540,9 +1473,9 @@ button{font-family:var(--sans);cursor:pointer;}
         </div>
       </div>
     </div>
-    <div class="footer-bottom">
+    <div class="footer-bot">
       <div>© 2024 WENZI Inc. All rights reserved.</div>
-      <div class="footer-bottom-links">
+      <div class="footer-bot-links">
         <a class="footer-lk">이용약관</a>
         <a class="footer-lk">개인정보처리방침</a>
       </div>
@@ -1550,42 +1483,59 @@ button{font-family:var(--sans);cursor:pointer;}
   </div>
 </footer>
 
-<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="맨 위로">
+<button class="scroll-top" id="scrollTop"
+  onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="맨 위로">
   <i class="ti ti-arrow-up"></i>
 </button>
 
+
 <script>
-// 네비 스크롤
+/* ── NAV ── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 20);
+  nav.classList.toggle('shadow', window.scrollY > 10);
   document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 500);
 });
 
-// 모바일 메뉴
+/* ── 모바일 메뉴 ── */
 function toggleMenu() {
   document.getElementById('mmenu').classList.toggle('open');
 }
 
-// fade-up 애니메이션
+/* ── Scroll Fade-Up ── */
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fu').forEach(el => obs.observe(el));
 
-// 카운트다운 타이머
-function updateCountdown() {
-  const el = document.getElementById('countdown');
+/* ── 카운트다운 타이머 ── */
+function tick() {
+  const el = document.getElementById('timer');
   if (!el) return;
-  const parts = el.textContent.split(':').map(Number);
-  let [h, m, s] = parts;
-  s--;
-  if (s < 0) { s = 59; m--; }
-  if (m < 0) { m = 59; h--; }
-  if (h < 0) { h = 23; m = 59; s = 59; }
-  el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const [h, m, s] = el.textContent.split(':').map(Number);
+  let ns = s - 1, nm = m, nh = h;
+  if (ns < 0) { ns = 59; nm--; }
+  if (nm < 0) { nm = 59; nh--; }
+  if (nh < 0) { nh = 23; nm = 59; ns = 59; }
+  el.textContent = `${String(nh).padStart(2,'0')}:${String(nm).padStart(2,'0')}:${String(ns).padStart(2,'0')}`;
 }
-setInterval(updateCountdown, 1000);
+setInterval(tick, 1000);
+
+/* ── FAQ 아코디언 ── */
+function toggleFaq(btn) {
+  const answer = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  // 모두 닫기
+  document.querySelectorAll('.faq-q.open').forEach(b => {
+    b.classList.remove('open');
+    b.nextElementSibling.style.maxHeight = null;
+  });
+  // 클릭한 것 열기
+  if (!isOpen) {
+    btn.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+}
 </script>
 </body>
 </html>
