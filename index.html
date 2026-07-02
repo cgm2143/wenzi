@@ -107,103 +107,170 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
    1. HERO
 ═══════════════════════════════════════ */
 .hero {
-  min-height:100vh; display:flex; align-items:center;
-  background:var(--cream); position:relative; overflow:hidden;
-  padding:100px 32px 80px;
+  min-height:100vh;
+  background:linear-gradient(180deg, #FFFCFB 0%, #FFF5F0 40%, #FFF0EC 100%);
+  position:relative; overflow:hidden;
+  padding:80px 32px 0;
+  display:flex; flex-direction:column; align-items:center;
 }
+/* 배경 하트 장식 */
 .hero-bg {
-  position:absolute; inset:0; pointer-events:none;
-  background:
-    radial-gradient(ellipse 55% 45% at 50% 0%,rgba(255,180,190,.2) 0%,transparent 60%),
-    radial-gradient(ellipse 35% 35% at 90% 60%,rgba(255,200,180,.1) 0%,transparent 60%);
+  position:absolute; inset:0; pointer-events:none; overflow:hidden;
 }
-.hero-in {
-  max-width:var(--max); margin:0 auto; width:100%;
-  display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center; position:relative; z-index:1;
+.hero-bg::before {
+  content:'❤'; position:absolute; font-size:14px; color:rgba(255,92,116,.15);
+  top:18%; left:8%; animation:hfloat 6s ease-in-out infinite;
+}
+.hero-bg::after {
+  content:'♥'; position:absolute; font-size:10px; color:rgba(255,143,163,.2);
+  top:30%; right:6%; animation:hfloat 8s ease-in-out infinite .5s;
+}
+@keyframes hfloat{0%,100%{transform:translateY(0) rotate(-10deg);}50%{transform:translateY(-12px) rotate(10deg);}}
+
+/* 상단: 카피 — 센터 정렬 */
+.hero-top {
+  width:100%; max-width:660px; text-align:center;
+  position:relative; z-index:2;
+  padding-bottom:0;
 }
 .hero-pill {
   display:inline-flex; align-items:center; gap:7px;
   padding:6px 16px; border-radius:50px;
-  background:rgba(255,92,116,.07); border:1px solid rgba(255,92,116,.18);
-  font-size:12px; font-weight:600; color:var(--rose); margin-bottom:24px;
+  background:rgba(255,92,116,.08); border:1px solid rgba(255,92,116,.2);
+  font-size:12px; font-weight:600; color:var(--rose); margin-bottom:22px;
 }
 .hero-pill-dot { width:6px; height:6px; border-radius:50%; background:var(--rose); animation:blink 2s ease-in-out infinite; }
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-.hero-h1 { font-size:clamp(36px,5vw,60px); font-weight:900; letter-spacing:-2px; line-height:1.1; color:var(--ink); margin-bottom:20px; }
+.hero-h1 {
+  font-size:clamp(34px,5vw,60px); font-weight:900;
+  letter-spacing:-2px; line-height:1.1; color:var(--ink); margin-bottom:18px;
+}
 .hero-h1 em { font-style:normal; color:var(--rose); }
-.hero-sub { font-size:17px; color:var(--ink-3); line-height:1.8; font-weight:300; margin-bottom:36px; }
+.hero-sub {
+  font-size:17px; color:var(--ink-3); line-height:1.8; font-weight:300;
+  margin-bottom:32px; max-width:520px; margin-left:auto; margin-right:auto;
+}
 .hero-sub strong { color:var(--ink-2); font-weight:600; }
-.hero-btns { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:40px; }
-.btn-main { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:16px 36px; border-radius:50px; background:var(--rose); color:#fff; font-size:16px; font-weight:700; box-shadow:0 8px 28px rgba(255,92,116,.28); transition:all .2s var(--ease); cursor:pointer; }
+.hero-btns {
+  display:flex; gap:12px; flex-wrap:wrap;
+  justify-content:center; margin-bottom:28px;
+}
+.btn-main {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:16px 36px; border-radius:50px; background:var(--rose); color:#fff;
+  font-size:16px; font-weight:700;
+  box-shadow:0 8px 28px rgba(255,92,116,.28);
+  transition:all .2s var(--ease); cursor:pointer;
+}
 .btn-main:hover { background:var(--rose-d); transform:translateY(-2px); box-shadow:0 14px 36px rgba(255,92,116,.35); }
-.btn-outline { display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:15px 28px; border-radius:50px; border:2px solid var(--ink-5); background:transparent; color:var(--ink-2); font-size:15px; font-weight:600; transition:all .15s; cursor:pointer; }
+.btn-outline {
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  padding:15px 28px; border-radius:50px; border:2px solid var(--ink-5);
+  background:transparent; color:var(--ink-2); font-size:15px; font-weight:600;
+  transition:all .15s; cursor:pointer;
+}
 .btn-outline:hover { border-color:var(--rose); color:var(--rose); }
-.hero-proof { display:flex; align-items:center; gap:6px; padding-top:28px; border-top:1px solid var(--ink-5); }
+.hero-proof {
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  margin-bottom:40px;
+}
 .hp-stars { display:flex; gap:1px; }
 .hp-stars i { color:#FBBF24; font-size:13px; }
 .hp-txt { font-size:13px; color:var(--ink-4); font-weight:300; }
 .hp-txt strong { color:var(--ink-2); font-weight:600; }
 
-/* 히어로 오른쪽 — 매니저 카드 */
-.hero-right { position:relative; display:flex; justify-content:center; }
-.manager-card {
-  background:#fff; border-radius:28px; overflow:hidden;
-  border:1px solid rgba(0,0,0,.07);
-  box-shadow:0 20px 60px rgba(0,0,0,.09), 0 4px 16px rgba(0,0,0,.04);
-  width:300px;
-  animation:cardFloat 7s ease-in-out infinite;
+/* 캐릭터 + 카드 영역 */
+.hero-visual {
+  width:100%; max-width:980px; position:relative; z-index:1;
+  display:flex; align-items:flex-end; justify-content:center;
+  margin-top:-10px;
 }
-@keyframes cardFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-.mc-head {
-  background:linear-gradient(135deg,#FFE4EC,#FFB8CC,#FF8FA8);
-  padding:28px 22px 20px; text-align:center; position:relative;
-}
-.mc-avatar {
-  width:72px; height:72px; border-radius:50%; margin:0 auto 12px;
-  background:#fff; border:3px solid rgba(255,255,255,.6);
-  display:flex; align-items:center; justify-content:center; font-size:36px;
-  box-shadow:0 4px 16px rgba(0,0,0,.12);
-}
-.mc-name { font-size:17px; font-weight:700; color:#fff; margin-bottom:3px; }
-.mc-role { font-size:12px; color:rgba(255,255,255,.8); }
-.mc-badge {
-  position:absolute; top:12px; right:12px;
-  background:rgba(255,255,255,.9); border-radius:20px; padding:4px 10px;
-  font-size:11px; font-weight:700; color:var(--rose);
-  display:flex; align-items:center; gap:4px;
-}
-.mc-online { width:6px; height:6px; border-radius:50%; background:#22C55E; }
-.mc-body { padding:18px; }
-.mc-msg {
-  background:var(--warm); border-radius:12px; padding:13px 14px;
-  font-size:13px; color:var(--ink-2); line-height:1.65; font-weight:300;
-  margin-bottom:14px; border-left:3px solid var(--rose);
-}
-.mc-msg strong { color:var(--rose); font-weight:600; }
-.mc-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
-.mc-stat { background:var(--cream); border-radius:10px; padding:10px; text-align:center; }
-.mc-stat-n { font-size:18px; font-weight:800; color:var(--rose); letter-spacing:-.5px; }
-.mc-stat-l { font-size:10px; color:var(--ink-4); margin-top:2px; }
-.mc-cta-btn {
-  width:100%; padding:12px; border-radius:12px;
-  background:var(--rose); color:#fff; font-size:13px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;
-  transition:all .15s; border:none; font-family:var(--sans);
-}
-.mc-cta-btn:hover { background:var(--rose-d); }
 
-/* 플로팅 알림 */
-.hero-notif {
-  position:absolute; background:#fff;
-  border:1px solid rgba(0,0,0,.07); border-radius:14px;
-  padding:10px 14px; display:flex; align-items:center; gap:9px;
-  box-shadow:0 8px 28px rgba(0,0,0,.09);
-  font-size:12px; font-weight:600; color:var(--ink);
+/* 커플 캐릭터 이미지 */
+.hero-couple-img {
+  width:clamp(280px, 36%, 440px);
+  position:relative; z-index:3;
+  animation:coupleFloat 6s ease-in-out infinite;
+  filter:drop-shadow(0 16px 40px rgba(255,92,116,.14));
 }
-.hn-ico { width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
-.hn1 { top:8%; left:-48px; animation:fn 5s ease-in-out infinite .3s; }
-.hn2 { bottom:15%; left:-60px; animation:fn 6s ease-in-out infinite 1s; }
-@keyframes fn{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+.hero-couple-img img { width:100%; height:auto; display:block; }
+@keyframes coupleFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+
+/* 왼쪽 카드 스택 */
+.hero-left-cards {
+  flex:1; display:flex; flex-direction:column; align-items:flex-end;
+  gap:14px; padding-bottom:60px; padding-right:24px;
+}
+/* 오른쪽 카드 스택 */
+.hero-right-cards {
+  flex:1; display:flex; flex-direction:column; align-items:flex-start;
+  gap:14px; padding-bottom:40px; padding-left:24px;
+}
+
+/* 공통 카드 */
+.hero-card {
+  background:#fff; border-radius:18px; padding:14px 16px;
+  border:1px solid rgba(0,0,0,.07);
+  box-shadow:0 8px 28px rgba(0,0,0,.08);
+  font-size:12px; font-weight:600; color:var(--ink);
+  width:200px;
+}
+.hero-card.sm { width:176px; }
+.hc-header { display:flex; align-items:center; gap:8px; margin-bottom:9px; }
+.hc-ico {
+  width:28px; height:28px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:14px;
+}
+.hc-title { font-size:11px; font-weight:700; color:var(--ink); }
+.hc-sub { font-size:10px; color:var(--ink-4); margin-top:1px; }
+
+/* 매니저 카드 */
+.mc-mini-head {
+  display:flex; align-items:center; gap:9px; margin-bottom:10px;
+}
+.mc-mini-av {
+  width:34px; height:34px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg,#FFE4EC,#FFB8CC);
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+  border:2px solid rgba(255,255,255,.8);
+}
+.mc-mini-name { font-size:12px; font-weight:700; color:var(--ink); }
+.mc-mini-role { font-size:10px; color:var(--ink-4); margin-top:1px; }
+.mc-mini-dot { width:7px; height:7px; border-radius:50%; background:#22C55E; margin-left:auto; flex-shrink:0; box-shadow:0 0 5px rgba(34,197,94,.4); }
+.mc-mini-msg {
+  font-size:11px; color:var(--ink-2); line-height:1.6; font-weight:300;
+  background:var(--warm); border-radius:8px; padding:9px 10px;
+  border-left:2px solid var(--rose);
+}
+.mc-mini-msg strong { color:var(--rose); font-weight:600; }
+
+/* 매칭 알림 카드 */
+.match-card { animation:cardA 5s ease-in-out infinite .4s; }
+.process-card { animation:cardA 7s ease-in-out infinite 1s; }
+.stats-card { animation:cardA 6s ease-in-out infinite .8s; }
+.manager-mini-card { animation:cardA 8s ease-in-out infinite .2s; }
+@keyframes cardA{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* 진행도 바 */
+.mini-bar-track { height:4px; background:var(--ink-5); border-radius:3px; overflow:hidden; margin-top:6px; }
+.mini-bar-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--rose),var(--rose-l)); }
+
+/* 스텝 미니 */
+.mini-steps { display:flex; align-items:center; gap:4px; margin-top:6px; }
+.ms-dot { width:20px; height:4px; border-radius:2px; background:var(--ink-5); }
+.ms-dot.done { background:var(--rose); }
+
+@media(max-width:1024px){
+  .hero-left-cards,.hero-right-cards { display:none; }
+  .hero-couple-img { width:clamp(220px,55%,360px); }
+  .hero-visual { justify-content:center; }
+}
+@media(max-width:768px){
+  .hero { padding:80px 24px 0; }
+  .hero-h1 { letter-spacing:-1px; }
+  .hero-btns { flex-direction:column; align-items:center; }
+  .hero-couple-img { width:clamp(200px,70%,300px); }
+}
 
 /* ═══════════════════════════════════════
    2. 이용 프로세스
@@ -608,9 +675,7 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
    RESPONSIVE
 ═══════════════════════════════════════ */
 @media(max-width:1024px){
-  .hero-in{grid-template-columns:1fr;gap:48px;}
-  .hero-right{order:-1;}
-  .hn1,.hn2{display:none;}
+  /* hero responsive handled in hero CSS */
   .manager-intro{grid-template-columns:1fr;gap:48px;}
   .process-grid{grid-template-columns:repeat(3,1fr);gap:24px;}
   .process-grid::before{display:none;}
@@ -686,89 +751,156 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 ══════════════════════════════════ -->
 <section class="hero">
   <div class="hero-bg"></div>
-  <div class="hero-in con">
 
-    <!-- 왼쪽 카피 -->
-    <div class="fu">
-      <div class="hero-pill">
-        <span class="hero-pill-dot"></span>
-        AI 커플매니저 · 직장인 소개팅 플랫폼
+  <!-- 상단 카피 (센터) -->
+  <div class="hero-top fu">
+    <div class="hero-pill">
+      <span class="hero-pill-dot"></span>
+      AI 커플매니저 · 직장인 소개팅 플랫폼
+    </div>
+    <h1 class="hero-h1">
+      AI 커플매니저가<br>
+      당신의 <em>인연을 연결합니다.</em>
+    </h1>
+    <p class="hero-sub">
+      직장인 증빙 인증 후 담당 AI 매니저가 배정됩니다.<br>
+      <strong>스와이프 없이</strong>, 매니저가 직접 상대를 추천하고 소개팅 일정까지 함께 잡아드립니다.
+    </p>
+    <div class="hero-btns">
+      <a href="#apply" class="btn-main">
+        <i class="ti ti-heart"></i> 소개팅 신청하기
+      </a>
+      <a href="#process" class="btn-outline">
+        이용방법 보기 <i class="ti ti-arrow-down"></i>
+      </a>
+    </div>
+    <div class="hero-proof">
+      <div class="hp-stars">
+        <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
+        <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
+        <i class="ti ti-star-filled"></i>
       </div>
-      <h1 class="hero-h1">
-        AI 커플매니저가<br>
-        당신에게 딱 맞는<br>
-        <em>인연을 연결합니다.</em>
-      </h1>
-      <p class="hero-sub">
-        직장인 증빙 인증 후 담당 AI 매니저가 배정됩니다.<br>
-        <strong>스와이프 없이</strong>, 매니저가 직접 상대를 추천하고<br>
-        소개팅 일정까지 함께 잡아드립니다.
-      </p>
-      <div class="hero-btns">
-        <a href="#apply" class="btn-main">
-          <i class="ti ti-heart"></i> 소개팅 신청하기
-        </a>
-        <a href="#process" class="btn-outline">
-          이용방법 보기 <i class="ti ti-arrow-down"></i>
-        </a>
-      </div>
-      <div class="hero-proof">
-        <div class="hp-stars">
-          <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
-          <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
-          <i class="ti ti-star-filled"></i>
+      <span style="width:8px"></span>
+      <p class="hp-txt"><strong>8,400쌍 이상</strong>의 커플이 WENZI를 통해 만났습니다.</p>
+    </div>
+  </div>
+
+  <!-- 하단 비주얼: 카드 + 캐릭터 + 카드 -->
+  <div class="hero-visual fu d2">
+
+    <!-- 왼쪽 카드들 -->
+    <div class="hero-left-cards">
+
+      <!-- AI 매니저 미니 카드 -->
+      <div class="hero-card manager-mini-card">
+        <div class="mc-mini-head">
+          <div class="mc-mini-av">🤖</div>
+          <div>
+            <div class="mc-mini-name">WENZI AI 매니저</div>
+            <div class="mc-mini-role">전담 커플매니저</div>
+          </div>
+          <div class="mc-mini-dot"></div>
         </div>
-        <span style="width:8px"></span>
-        <p class="hp-txt"><strong>8,400쌍 이상</strong>의 커플이 WENZI를 통해 만났습니다.</p>
+        <div class="mc-mini-msg">
+          가치관 분석 완료! <strong>딱 맞는 분</strong>을 찾았어요 💕
+        </div>
+      </div>
+
+      <!-- 신뢰도 카드 -->
+      <div class="hero-card sm stats-card">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:#F0FDF4;">🛡️</div>
+          <div>
+            <div class="hc-title">신뢰도 인증 완료</div>
+            <div class="hc-sub">본인 · 직장 · 학력</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-bottom:4px;">
+          <span>신뢰도 점수</span><span style="font-weight:700;color:var(--rose);">92점</span>
+        </div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:92%"></div></div>
+      </div>
+
+      <!-- 매칭 통계 카드 -->
+      <div class="hero-card sm match-card">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:var(--rose-bg);">💑</div>
+          <div>
+            <div class="hc-title">매칭 현황</div>
+            <div class="hc-sub">이번 달 기준</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;">
+          <div style="text-align:center;background:var(--warm);border-radius:7px;padding:7px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--rose);letter-spacing:-.5px;">8,421</div>
+            <div style="font-size:9px;color:var(--ink-4);margin-top:1px;">성사된 만남</div>
+          </div>
+          <div style="text-align:center;background:var(--warm);border-radius:7px;padding:7px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--rose);letter-spacing:-.5px;">97%</div>
+            <div style="font-size:9px;color:var(--ink-4);margin-top:1px;">만족도</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 오른쪽 AI 매니저 카드 -->
-    <div class="hero-right fu d2">
-      <!-- 플로팅 알림 -->
-      <div class="hero-notif hn1">
-        <div class="hn-ico" style="background:#FFF0EA;">📋</div>
-        <div>
-          <div style="font-size:12px;font-weight:700;color:var(--ink);">승인 완료</div>
-          <div style="font-size:10px;color:var(--ink-4);margin-top:1px;">직장인증 검수 완료됐어요</div>
+    <!-- 커플 캐릭터 (중앙, 메인) -->
+    <div class="hero-couple-img">
+      <img src="couple.png" alt="WENZI 커플 캐릭터 — 당신의 인연을 응원해요"
+        onerror="this.style.display='none'">
+    </div>
+
+    <!-- 오른쪽 카드들 -->
+    <div class="hero-right-cards">
+
+      <!-- 승인 완료 카드 -->
+      <div class="hero-card sm process-card">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:#FFF3E0;">📋</div>
+          <div>
+            <div class="hc-title">신청 진행 현황</div>
+            <div class="hc-sub">승인 완료 · 매칭 중</div>
+          </div>
         </div>
+        <div class="mini-steps">
+          <div class="ms-dot done"></div>
+          <div class="ms-dot done"></div>
+          <div class="ms-dot done"></div>
+          <div class="ms-dot done"></div>
+          <div class="ms-dot"></div>
+        </div>
+        <div style="font-size:10px;color:var(--rose);margin-top:6px;font-weight:600;">4단계: 매니저 매칭 중...</div>
       </div>
-      <div class="hero-notif hn2">
-        <div class="hn-ico" style="background:var(--rose-bg);">💌</div>
-        <div>
-          <div style="font-size:12px;font-weight:700;color:var(--ink);">매니저 메시지</div>
-          <div style="font-size:10px;color:var(--ink-4);margin-top:1px;">오늘 추천 프로필이 도착했어요</div>
+
+      <!-- 오늘의 추천 미리보기 카드 -->
+      <div class="hero-card">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:var(--rose-bg);">💌</div>
+          <div>
+            <div class="hc-title">오늘의 추천 도착</div>
+            <div class="hc-sub">AI 매니저가 선택한 분</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:9px;background:var(--warm);border-radius:10px;padding:10px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FFE4EC,#FFB8CC);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">👩</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--ink);">소연 · 27세</div>
+            <div style="font-size:10px;color:var(--ink-3);margin-top:1px;">서울 강남 · 간호사</div>
+          </div>
+          <div style="margin-left:auto;font-size:12px;font-weight:800;color:var(--rose);">97%</div>
         </div>
       </div>
 
-      <div class="manager-card">
-        <div class="mc-head">
-          <div class="mc-badge"><span class="mc-online"></span>온라인</div>
-          <div class="mc-avatar">🤖</div>
-          <div class="mc-name">WENZI AI 매니저</div>
-          <div class="mc-role">담당 커플매니저 · 24시간 대기 중</div>
+      <!-- AI Daily Letter 미니 카드 -->
+      <div class="hero-card sm">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:#FFF8F0;">✉️</div>
+          <div>
+            <div class="hc-title">AI Daily Letter</div>
+            <div class="hc-sub">오늘 오전 9:00</div>
+          </div>
         </div>
-        <div class="mc-body">
-          <div class="mc-msg">
-            안녕하세요! 저는 회원님의 전담 <strong>AI 커플매니저</strong>예요.<br>
-            프로필 검토 후 가장 잘 맞는 분을 직접 추천해드릴게요. 💕
-          </div>
-          <div class="mc-stats">
-            <div class="mc-stat">
-              <div class="mc-stat-n">3.2일</div>
-              <div class="mc-stat-l">평균 매칭 소요</div>
-            </div>
-            <div class="mc-stat">
-              <div class="mc-stat-n">97%</div>
-              <div class="mc-stat-l">매칭 만족도</div>
-            </div>
-          </div>
-          <a href="#apply">
-            <button class="mc-cta-btn">
-              <i class="ti ti-send" style="font-size:14px"></i>
-              소개팅 신청 시작하기
-            </button>
-          </a>
+        <div style="font-size:11px;color:var(--ink-2);line-height:1.6;font-weight:300;font-style:italic;">
+          "오늘은 여행 이야기로<br>먼저 대화를 시작해보세요 ✈️"
         </div>
       </div>
     </div>
