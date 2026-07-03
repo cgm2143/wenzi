@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>로그인 — WENZI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root {
+  --rose:    #FF5C74;
+  --rose-d:  #E84560;
+  --rose-l:  #FF8FA3;
+  --rose-bg: #FFF5F7;
+  --blush:   #FFE4E9;
+  --ink:     #1A1A1A;
+  --ink-2:   #3D3D3D;
+  --ink-3:   #6B6B6B;
+  --ink-4:   #A0A0A0;
+  --ink-5:   #E8E8E8;
+  --cream:   #FFFDFB;
+  --warm:    #FFF8F4;
+  --white:   #FFFFFF;
+  --sans:    'Noto Sans KR', system-ui, sans-serif;
+  --ease:    cubic-bezier(.22,1,.36,1);
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { height:100%; }
+body {
+  font-family:var(--sans); min-height:100vh;
+  background:linear-gradient(160deg, #FFFCFB 0%, #FFF5F0 50%, #FFF0EC 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:24px; -webkit-font-smoothing:antialiased;
+  position:relative; overflow:hidden;
+}
+
+/* 배경 장식 */
+.bg-deco {
+  position:fixed; border-radius:50%; pointer-events:none;
+}
+.bg-deco-1 {
+  width:400px; height:400px; top:-100px; right:-80px;
+  background:radial-gradient(circle, rgba(255,92,116,.08) 0%, transparent 70%);
+}
+.bg-deco-2 {
+  width:300px; height:300px; bottom:-80px; left:-60px;
+  background:radial-gradient(circle, rgba(255,143,163,.07) 0%, transparent 70%);
+}
+
+/* 상단 로고 */
+.login-logo {
+  display:block; margin-bottom:32px; text-align:center; text-decoration:none;
+}
+.login-logo img {
+  height:52px; width:auto;
+}
+.login-logo-txt {
+  font-size:26px; font-weight:900; color:var(--rose); letter-spacing:2px;
+}
+
+/* 카드 */
+.login-card {
+  background:var(--white);
+  border-radius:28px;
+  border:1px solid rgba(0,0,0,.07);
+  box-shadow:0 20px 60px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+  padding:44px 40px;
+  width:100%; max-width:420px;
+  position:relative; z-index:1;
+}
+
+.card-title {
+  font-size:24px; font-weight:800; color:var(--ink);
+  letter-spacing:-.5px; margin-bottom:6px; text-align:center;
+}
+.card-sub {
+  font-size:14px; color:var(--ink-4); font-weight:300;
+  text-align:center; margin-bottom:32px; line-height:1.6;
+}
+
+/* 소셜 로그인 버튼 */
+.social-btns { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+
+.btn-kakao {
+  width:100%; padding:15px 20px; border-radius:14px; border:none;
+  background:#FEE500; color:#3A1D1D;
+  font-size:15px; font-weight:700; font-family:var(--sans);
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  cursor:pointer; transition:all .2s var(--ease);
+  box-shadow:0 4px 16px rgba(254,229,0,.3);
+}
+.btn-kakao:hover {
+  background:#F0D900; transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(254,229,0,.4);
+}
+.btn-kakao:active { transform:translateY(0); }
+
+.btn-naver {
+  width:100%; padding:15px 20px; border-radius:14px; border:none;
+  background:#03C75A; color:#fff;
+  font-size:15px; font-weight:700; font-family:var(--sans);
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  cursor:pointer; transition:all .2s var(--ease);
+  box-shadow:0 4px 16px rgba(3,199,90,.25);
+}
+.btn-naver:hover {
+  background:#02B350; transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(3,199,90,.35);
+}
+.btn-naver:active { transform:translateY(0); }
+
+/* 소셜 아이콘 */
+.kakao-ico {
+  width:22px; height:22px; flex-shrink:0;
+}
+.naver-ico {
+  width:22px; height:22px; flex-shrink:0;
+  background:#fff; border-radius:3px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:900; color:#03C75A;
+  font-family:'Arial Black', sans-serif; line-height:1;
+}
+
+/* 구분선 */
+.divider {
+  display:flex; align-items:center; gap:12px; margin-bottom:24px;
+}
+.divider-line { flex:1; height:1px; background:var(--ink-5); }
+.divider-txt { font-size:12px; color:var(--ink-4); white-space:nowrap; }
+
+/* 이메일 폼 */
+.field { margin-bottom:14px; }
+.field-label {
+  display:block; font-size:11px; font-weight:700; color:var(--ink-3);
+  letter-spacing:.4px; margin-bottom:7px; text-transform:uppercase;
+}
+.field-input {
+  width:100%; padding:13px 16px;
+  background:var(--warm); border:1.5px solid transparent;
+  border-radius:12px; color:var(--ink);
+  font-size:14px; font-family:var(--sans); outline:none;
+  transition:all .15s;
+}
+.field-input:focus {
+  background:var(--white); border-color:var(--rose);
+  box-shadow:0 0 0 3px rgba(255,92,116,.1);
+}
+.field-input::placeholder { color:var(--ink-4); }
+.field-input-wrap { position:relative; }
+.pw-toggle {
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  color:var(--ink-4); cursor:pointer; font-size:17px; transition:color .15s;
+  background:none; border:none; padding:0;
+}
+.pw-toggle:hover { color:var(--ink-2); }
+
+/* 로그인 버튼 */
+.btn-login {
+  width:100%; padding:15px; border-radius:50px; border:none;
+  background:var(--rose); color:#fff;
+  font-size:16px; font-weight:700; font-family:var(--sans);
+  cursor:pointer; transition:all .2s var(--ease); margin-top:4px;
+  box-shadow:0 8px 24px rgba(255,92,116,.25);
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn-login:hover {
+  background:var(--rose-d); transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(255,92,116,.35);
+}
+.btn-login:active { transform:translateY(0); }
+
+/* 보조 링크 */
+.login-footer {
+  margin-top:24px; text-align:center;
+  display:flex; flex-direction:column; gap:12px;
+}
+.login-links {
+  display:flex; align-items:center; justify-content:center; gap:4px;
+  font-size:13px; color:var(--ink-4);
+}
+.login-links a {
+  color:var(--ink-3); font-weight:500; cursor:pointer; transition:color .15s;
+  text-decoration:none;
+}
+.login-links a:hover { color:var(--rose); }
+.login-links span { color:var(--ink-5); margin:0 4px; }
+.signup-txt { font-size:14px; color:var(--ink-3); }
+.signup-txt a {
+  color:var(--rose); font-weight:700; text-decoration:none; cursor:pointer;
+}
+.signup-txt a:hover { color:var(--rose-d); }
+
+/* 홈 돌아가기 */
+.back-home {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:13px; color:var(--ink-4); text-decoration:none;
+  margin-top:24px; transition:color .15s;
+  position:relative; z-index:1;
+}
+.back-home:hover { color:var(--rose); }
+
+/* 보안 안내 */
+.secure-note {
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  font-size:11px; color:var(--ink-4); margin-top:20px;
+}
+.secure-note i { font-size:13px; color:var(--ink-5); }
+
+/* 반응형 */
+@media(max-width:480px) {
+  .login-card { padding:32px 24px; border-radius:20px; }
+  .card-title { font-size:20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-deco bg-deco-1"></div>
+<div class="bg-deco bg-deco-2"></div>
+
+<!-- 로고 -->
+<a href="index.html" class="login-logo">
+  <img src="logo.png" alt="WENZI"
+    onerror="this.outerHTML='<div class=\'login-logo-txt\'>WENZI</div>'">
+</a>
+
+<!-- 로그인 카드 -->
+<div class="login-card">
+  <h1 class="card-title">환영합니다 👋</h1>
+  <p class="card-sub">WENZI에 로그인하고<br>오늘의 인연을 만나보세요.</p>
+
+  <!-- 소셜 로그인 -->
+  <div class="social-btns">
+    <button class="btn-kakao" onclick="alert('카카오 로그인 연동 준비 중입니다.')">
+      <svg class="kakao-ico" viewBox="0 0 24 24" fill="none">
+        <rect width="24" height="24" rx="5" fill="#FEE500"/>
+        <path d="M12 5C7.86 5 4.5 7.69 4.5 11c0 2.1 1.26 3.96 3.18 5.07l-.81 3.06c-.06.18.12.33.3.24l3.57-2.34c.48.06.97.09 1.26.09 4.14 0 7.5-2.69 7.5-6S16.14 5 12 5z" fill="#3A1D1D"/>
+      </svg>
+      카카오로 시작하기
+    </button>
+
+    <button class="btn-naver" onclick="alert('네이버 로그인 연동 준비 중입니다.')">
+      <div class="naver-ico">N</div>
+      네이버로 시작하기
+    </button>
+  </div>
+
+  <!-- 구분선 -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <span class="divider-txt">또는 이메일로 로그인</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- 이메일 폼 -->
+  <div class="field">
+    <label class="field-label">이메일</label>
+    <input class="field-input" type="email" placeholder="example@wenzi.co" id="emailInput">
+  </div>
+  <div class="field">
+    <label class="field-label">비밀번호</label>
+    <div class="field-input-wrap">
+      <input class="field-input" type="password" placeholder="비밀번호를 입력하세요" id="pwInput" style="padding-right:48px;">
+      <button class="pw-toggle" onclick="togglePw()" aria-label="비밀번호 표시">
+        <i class="ti ti-eye" id="pwIcon"></i>
+      </button>
+    </div>
+  </div>
+
+  <button class="btn-login" onclick="handleLogin()">
+    <i class="ti ti-heart" style="font-size:16px;"></i>
+    로그인
+  </button>
+
+  <div class="login-footer">
+    <div class="login-links">
+      <a href="#">아이디 찾기</a>
+      <span>|</span>
+      <a href="#">비밀번호 재설정</a>
+    </div>
+    <div class="signup-txt">
+      아직 회원이 아니신가요?
+      <a href="#apply" onclick="location.href='index.html#apply'">소개팅 신청하기 →</a>
+    </div>
+  </div>
+
+  <div class="secure-note">
+    <i class="ti ti-shield-check"></i>
+    회원님의 정보는 암호화되어 안전하게 보호됩니다.
+  </div>
+</div>
+
+<a href="index.html" class="back-home">
+  <i class="ti ti-arrow-left" style="font-size:14px;"></i>
+  홈으로 돌아가기
+</a>
+
+<script>
+function togglePw() {
+  const inp = document.getElementById('pwInput');
+  const ico = document.getElementById('pwIcon');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    ico.className = 'ti ti-eye-off';
+  } else {
+    inp.type = 'password';
+    ico.className = 'ti ti-eye';
+  }
+}
+
+function handleLogin() {
+  const email = document.getElementById('emailInput').value.trim();
+  const pw = document.getElementById('pwInput').value.trim();
+  if (!email || !pw) {
+    alert('이메일과 비밀번호를 입력해주세요.');
+    return;
+  }
+  alert('로그인 기능은 서버 연동 후 사용 가능합니다.');
+}
+</script>
+</body>
+</html>
