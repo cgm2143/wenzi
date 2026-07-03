@@ -185,37 +185,46 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 .hp-txt { font-size:13px; color:var(--ink-4); font-weight:300; }
 .hp-txt strong { color:var(--ink-2); font-weight:600; }
 
-/* 캐릭터 단독 — 텍스트 위에 */
+/* 캐릭터 + 양쪽 카드 래퍼 */
 .hero-couple-wrap {
-  width:100%; display:flex; justify-content:center;
-  position:relative; z-index:2; margin-bottom:-20px;
+  width:100%; max-width:1000px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; z-index:2;
+  margin-top:16px; margin-bottom:32px;
+  gap:0;
 }
+
+/* 중앙 캐릭터 */
 .hero-couple-img {
-  width:clamp(200px, 28%, 320px);
+  width:clamp(200px, 26%, 300px);
+  flex-shrink:0;
   animation:coupleFloat 6s ease-in-out infinite;
   filter:drop-shadow(0 12px 32px rgba(255,92,116,.12));
+  position:relative; z-index:3;
 }
 .hero-couple-img img { width:100%; height:auto; display:block; }
 @keyframes coupleFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 
-/* 카드 비주얼 영역 (텍스트 아래) */
-.hero-visual {
-  width:100%; max-width:980px; position:relative; z-index:1;
-  display:flex; align-items:flex-end; justify-content:center;
-  margin-top:8px;
-}
 /* 왼쪽 카드 스택 */
 .hero-left-cards {
   flex:1; display:flex; flex-direction:column; align-items:flex-end;
-  gap:14px; padding-bottom:20px; padding-right:24px;
+  gap:12px; padding-right:20px;
 }
 /* 오른쪽 카드 스택 */
 .hero-right-cards {
   flex:1; display:flex; flex-direction:column; align-items:flex-start;
-  gap:14px; padding-bottom:20px; padding-left:24px;
+  gap:12px; padding-left:20px;
 }
-/* 카드 없이 캐릭터만 보이게 (비주얼 영역 숨김) */
-.hero-visual-spacer { height: 40px; }
+
+/* 카드 floating 애니메이션 — 각각 다른 타이밍 */
+.hero-card { animation:cardF 5s ease-in-out infinite; }
+.hero-card:nth-child(1){ animation-delay:0s; }
+.hero-card:nth-child(2){ animation-delay:.8s; }
+.hero-card:nth-child(3){ animation-delay:1.6s; }
+@keyframes cardF{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* 하단 비주얼 (숨김 — 카드 이미 위로 이동) */
+.hero-visual { display:none; }
 
 /* 공통 카드 */
 .hero-card {
@@ -272,7 +281,7 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 
 @media(max-width:1024px){
   .hero-left-cards,.hero-right-cards { display:none; }
-  .hero-couple-img { width:clamp(180px,45%,280px); }
+  .hero-couple-img { width:clamp(160px,50%,260px); }
 }
 @media(max-width:768px){
   .hero { padding:110px 24px 0; }
@@ -759,12 +768,116 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 <section class="hero">
   <div class="hero-bg"></div>
 
-  <!-- 캐릭터 이미지 (텍스트 위) -->
+  <!-- 캐릭터 + 양쪽 카드 (통합 래퍼) -->
   <div class="hero-couple-wrap fu">
+
+    <!-- 왼쪽 카드 3개 -->
+    <div class="hero-left-cards">
+      <div class="hero-card">
+        <div class="mc-mini-head">
+          <div class="mc-mini-av">🤖</div>
+          <div>
+            <div class="mc-mini-name">WENZI AI 매니저</div>
+            <div class="mc-mini-role">전담 커플매니저</div>
+          </div>
+          <div class="mc-mini-dot"></div>
+        </div>
+        <div class="mc-mini-msg">가치관 분석 완료! <strong>딱 맞는 분</strong>을 찾았어요 💕</div>
+      </div>
+
+      <div class="hero-card sm">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:#F0FDF4;">🛡️</div>
+          <div>
+            <div class="hc-title">신뢰도 인증 완료</div>
+            <div class="hc-sub">본인 · 직장 · 학력</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-bottom:4px;">
+          <span>신뢰도 점수</span><span style="font-weight:700;color:var(--rose);">92점</span>
+        </div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:92%"></div></div>
+      </div>
+
+      <div class="hero-card sm">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:var(--rose-bg);">💑</div>
+          <div>
+            <div class="hc-title">매칭 현황</div>
+            <div class="hc-sub">이번 달 기준</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;">
+          <div style="text-align:center;background:var(--warm);border-radius:7px;padding:7px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--rose);letter-spacing:-.5px;">8,421</div>
+            <div style="font-size:9px;color:var(--ink-4);margin-top:1px;">성사된 만남</div>
+          </div>
+          <div style="text-align:center;background:var(--warm);border-radius:7px;padding:7px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--rose);letter-spacing:-.5px;">97%</div>
+            <div style="font-size:9px;color:var(--ink-4);margin-top:1px;">만족도</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 중앙 캐릭터 -->
     <div class="hero-couple-img">
       <img src="couple.png" alt="WENZI 커플 캐릭터"
         onerror="this.style.display='none'">
     </div>
+
+    <!-- 오른쪽 카드 3개 -->
+    <div class="hero-right-cards">
+      <div class="hero-card sm">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:#FFF3E0;">📋</div>
+          <div>
+            <div class="hc-title">신청 진행 현황</div>
+            <div class="hc-sub">승인 완료 · 매칭 중</div>
+          </div>
+        </div>
+        <div class="mini-steps">
+          <div class="ms-dot done"></div>
+          <div class="ms-dot done"></div>
+          <div class="ms-dot done"></div>
+          <div class="ms-dot done"></div>
+          <div class="ms-dot"></div>
+        </div>
+        <div style="font-size:10px;color:var(--rose);margin-top:6px;font-weight:600;">4단계: 매니저 매칭 중...</div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:var(--rose-bg);">💌</div>
+          <div>
+            <div class="hc-title">오늘의 추천 도착</div>
+            <div class="hc-sub">AI 매니저가 선택한 분</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:9px;background:var(--warm);border-radius:10px;padding:10px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FFE4EC,#FFB8CC);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">👩</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--ink);">소연 · 27세</div>
+            <div style="font-size:10px;color:var(--ink-3);margin-top:1px;">서울 강남 · 간호사</div>
+          </div>
+          <div style="margin-left:auto;font-size:12px;font-weight:800;color:var(--rose);">97%</div>
+        </div>
+      </div>
+
+      <div class="hero-card sm">
+        <div class="hc-header">
+          <div class="hc-ico" style="background:#FFF8F0;">✉️</div>
+          <div>
+            <div class="hc-title">AI Daily Letter</div>
+            <div class="hc-sub">오늘 오전 9:00</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--ink-2);line-height:1.6;font-weight:300;font-style:italic;">
+          "오늘은 여행 이야기로<br>먼저 대화를 시작해보세요 ✈️"
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- 카피 (센터) -->
@@ -795,120 +908,7 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
     </div>
   </div>
 
-  <!-- 하단 비주얼: 카드들 -->
-  <div class="hero-visual fu d2">
 
-    <!-- 왼쪽 카드들 -->
-    <div class="hero-left-cards">
-
-      <!-- AI 매니저 미니 카드 -->
-      <div class="hero-card manager-mini-card">
-        <div class="mc-mini-head">
-          <div class="mc-mini-av">🤖</div>
-          <div>
-            <div class="mc-mini-name">WENZI AI 매니저</div>
-            <div class="mc-mini-role">전담 커플매니저</div>
-          </div>
-          <div class="mc-mini-dot"></div>
-        </div>
-        <div class="mc-mini-msg">
-          가치관 분석 완료! <strong>딱 맞는 분</strong>을 찾았어요 💕
-        </div>
-      </div>
-
-      <!-- 신뢰도 카드 -->
-      <div class="hero-card sm stats-card">
-        <div class="hc-header">
-          <div class="hc-ico" style="background:#F0FDF4;">🛡️</div>
-          <div>
-            <div class="hc-title">신뢰도 인증 완료</div>
-            <div class="hc-sub">본인 · 직장 · 학력</div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-bottom:4px;">
-          <span>신뢰도 점수</span><span style="font-weight:700;color:var(--rose);">92점</span>
-        </div>
-        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:92%"></div></div>
-      </div>
-
-      <!-- 매칭 통계 카드 -->
-      <div class="hero-card sm match-card">
-        <div class="hc-header">
-          <div class="hc-ico" style="background:var(--rose-bg);">💑</div>
-          <div>
-            <div class="hc-title">매칭 현황</div>
-            <div class="hc-sub">이번 달 기준</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;">
-          <div style="text-align:center;background:var(--warm);border-radius:7px;padding:7px 4px;">
-            <div style="font-size:16px;font-weight:800;color:var(--rose);letter-spacing:-.5px;">8,421</div>
-            <div style="font-size:9px;color:var(--ink-4);margin-top:1px;">성사된 만남</div>
-          </div>
-          <div style="text-align:center;background:var(--warm);border-radius:7px;padding:7px 4px;">
-            <div style="font-size:16px;font-weight:800;color:var(--rose);letter-spacing:-.5px;">97%</div>
-            <div style="font-size:9px;color:var(--ink-4);margin-top:1px;">만족도</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 오른쪽 카드들 -->
-    <div class="hero-right-cards">
-
-      <!-- 승인 완료 카드 -->
-      <div class="hero-card sm process-card">
-        <div class="hc-header">
-          <div class="hc-ico" style="background:#FFF3E0;">📋</div>
-          <div>
-            <div class="hc-title">신청 진행 현황</div>
-            <div class="hc-sub">승인 완료 · 매칭 중</div>
-          </div>
-        </div>
-        <div class="mini-steps">
-          <div class="ms-dot done"></div>
-          <div class="ms-dot done"></div>
-          <div class="ms-dot done"></div>
-          <div class="ms-dot done"></div>
-          <div class="ms-dot"></div>
-        </div>
-        <div style="font-size:10px;color:var(--rose);margin-top:6px;font-weight:600;">4단계: 매니저 매칭 중...</div>
-      </div>
-
-      <!-- 오늘의 추천 미리보기 카드 -->
-      <div class="hero-card">
-        <div class="hc-header">
-          <div class="hc-ico" style="background:var(--rose-bg);">💌</div>
-          <div>
-            <div class="hc-title">오늘의 추천 도착</div>
-            <div class="hc-sub">AI 매니저가 선택한 분</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:9px;background:var(--warm);border-radius:10px;padding:10px;">
-          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FFE4EC,#FFB8CC);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">👩</div>
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--ink);">소연 · 27세</div>
-            <div style="font-size:10px;color:var(--ink-3);margin-top:1px;">서울 강남 · 간호사</div>
-          </div>
-          <div style="margin-left:auto;font-size:12px;font-weight:800;color:var(--rose);">97%</div>
-        </div>
-      </div>
-
-      <!-- AI Daily Letter 미니 카드 -->
-      <div class="hero-card sm">
-        <div class="hc-header">
-          <div class="hc-ico" style="background:#FFF8F0;">✉️</div>
-          <div>
-            <div class="hc-title">AI Daily Letter</div>
-            <div class="hc-sub">오늘 오전 9:00</div>
-          </div>
-        </div>
-        <div style="font-size:11px;color:var(--ink-2);line-height:1.6;font-weight:300;font-style:italic;">
-          "오늘은 여행 이야기로<br>먼저 대화를 시작해보세요 ✈️"
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
 
