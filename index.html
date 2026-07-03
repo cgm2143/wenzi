@@ -541,8 +541,8 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 }
 .story-card:hover { transform:translateY(-4px); box-shadow:0 12px 36px rgba(0,0,0,.08); }
 .story-photo {
-  height:160px; display:flex; align-items:center; justify-content:center;
-  font-size:60px; position:relative;
+  height:200px; display:flex; align-items:center; justify-content:center;
+  font-size:60px; position:relative; overflow:hidden;
 }
 .story-d-badge {
   position:absolute; bottom:10px; right:10px;
@@ -1244,7 +1244,9 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
     <!-- 커플 스토리 -->
     <div class="couple-grid" id="couplesPanel">
       <div class="story-card fu d1">
-        <div class="story-photo" style="background:linear-gradient(135deg,#FFE4EC,#FFB8CC);">☕ 👫</div>
+        <div class="story-photo" style="background:#EEE;padding:0;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1521543832500-49e69fb00a28?w=600&q=80&fit=crop" alt="카페 연인" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
         <div class="story-body">
           <div class="story-title">성수동 카페에서 시작된 인연</div>
           <div class="story-preview">AI 매니저가 추천해준 성수동 브런치 코스. 처음 만난 날 3시간이 훌쩍 지나갔어요. 이제 함께 100일이 됐습니다.</div>
@@ -1252,7 +1254,9 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
         </div>
       </div>
       <div class="story-card fu d2">
-        <div class="story-photo" style="background:linear-gradient(135deg,#E8F4FD,#BEE3F8);">🌸 👫</div>
+        <div class="story-photo" style="background:#EEE;padding:0;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1522120098840-f3cc9f3bec50?w=600&q=80&fit=crop" alt="벚꽃 연인" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
         <div class="story-body">
           <div class="story-title">봄 산책으로 이어진 만남</div>
           <div class="story-preview">서로 등산을 좋아한다는 공통점을 AI가 찾아줬어요. 북한산 첫 데이트 후 지금은 매주 함께 산을 오릅니다.</div>
@@ -1260,7 +1264,9 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
         </div>
       </div>
       <div class="story-card fu d3">
-        <div class="story-photo" style="background:linear-gradient(135deg,#FFF9E6,#FFE9A0);">🎬 👫</div>
+        <div class="story-photo" style="background:#EEE;padding:0;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600&q=80&fit=crop" alt="영화관 커플" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
         <div class="story-body">
           <div class="story-title">영화 취향이 같았던 두 사람</div>
           <div class="story-preview">AI가 둘 다 독립영화를 좋아한다는 걸 알고 CGV 아트하우스를 추천해줬어요. 그날 이후 지금은 예비 부부가 됐습니다.</div>
