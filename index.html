@@ -142,10 +142,15 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 .hero-pill-dot { width:6px; height:6px; border-radius:50%; background:var(--rose); animation:blink 2s ease-in-out infinite; }
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
 .hero-h1 {
-  font-size:clamp(34px,5vw,60px); font-weight:900;
-  letter-spacing:-2px; line-height:1.1; color:var(--ink); margin-bottom:18px;
+  font-weight:900; letter-spacing:-1px;
+  color:var(--ink); margin-bottom:18px; line-height:1;
 }
-.hero-h1 em { font-style:normal; color:var(--rose); }
+.hero-h1 .line1 {
+  display:block; font-size:clamp(22px,2.8vw,30px);
+  letter-spacing:-.5px; margin-bottom:10px;
+}
+.hero-h1 em { font-style:normal; color:var(--rose); display:block;
+  font-size:clamp(16px,2vw,22px); font-weight:700; letter-spacing:-.3px; line-height:1.45; }
 .hero-sub {
   font-size:17px; color:var(--ink-3); line-height:1.8; font-weight:300;
   margin-bottom:32px; max-width:520px; margin-left:auto; margin-right:auto;
@@ -721,7 +726,6 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
     </a>
     <div class="nav-links">
       <a href="#process"  class="nav-lk">이용방법</a>
-      <a href="#manager"  class="nav-lk">AI 커플매니저</a>
       <a href="#coupon"   class="nav-lk">소개팅 신청권</a>
       <a href="#reviews"  class="nav-lk">이용후기</a>
       <a href="#apply"    class="nav-lk">소개팅 신청</a>
@@ -738,7 +742,6 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 
 <div class="mm" id="mm">
   <a href="#process" class="mm-lk" onclick="toggleMenu()">이용방법</a>
-  <a href="#manager" class="mm-lk" onclick="toggleMenu()">AI 커플매니저</a>
   <a href="#coupon"  class="mm-lk" onclick="toggleMenu()">소개팅 신청권</a>
   <a href="#reviews" class="mm-lk" onclick="toggleMenu()">이용후기</a>
   <div class="mm-div"></div>
@@ -755,12 +758,11 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
   <!-- 상단 카피 (센터) -->
   <div class="hero-top fu">
 <h1 class="hero-h1">
-      AI 커플매니저가<br>
-      당신의 <em>인연을 연결합니다.</em>
+      <span class="line1">퇴근 후에도 새로운<br>인연은 시작될 수 있습니다.</span>
+      <em>직장인을 위한 편안한 소개팅,<br>WENZI에서 만나보세요.</em>
     </h1>
     <p class="hero-sub">
-      직장인 증빙 인증 후 담당 AI 매니저가 배정됩니다.<br>
-      <strong>스와이프 없이</strong>, 매니저가 직접 상대를 추천하고 소개팅 일정까지 함께 잡아드립니다.
+바쁜 일상 속에서도 부담 없이,<br>좋은 사람과의 만남을 자연스럽게 이어가세요.
     </p>
     <div class="hero-btns">
       <a href="#apply" class="btn-main">
@@ -965,67 +967,7 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 </section>
 
 
-<!-- ══════════════════════════════════
-     3. AI 커플매니저
-══════════════════════════════════ -->
-<section class="sec bg-cream" id="manager">
-  <div class="manager-intro con">
-    <div class="fu">
-      <div class="eyebrow">AI 커플매니저</div>
-      <h2 class="h2">사람 매니저 대신<br><span class="em">AI가 24시간</span><br>함께합니다.</h2>
-      <p class="body-txt">기존 소개팅 서비스는 매니저 1명이 수백 명을 담당합니다. WENZI는 AI 매니저가 1:1로 배정되어 회원님만을 위한 매칭을 진행합니다.</p>
-      <div class="mi-features" style="margin-top:36px;">
-        <div class="mi-feat fu d1">
-          <div class="mi-feat-ico"><i class="ti ti-user-heart"></i></div>
-          <div>
-            <div class="mi-feat-title">1:1 전담 AI 매니저 배정</div>
-            <div class="mi-feat-desc">가입 승인 즉시 전담 AI 매니저가 배정됩니다. 가치관·직업·생활패턴을 분석해 맞춤 상대를 찾습니다.</div>
-          </div>
-        </div>
-        <div class="mi-feat fu d2">
-          <div class="mi-feat-ico"><i class="ti ti-brain"></i></div>
-          <div>
-            <div class="mi-feat-title">AI 가치관 인터뷰</div>
-            <div class="mi-feat-desc">대화형 AI 인터뷰로 성격·연애관·생활패턴을 파악합니다. 단순 조건 매칭이 아닌 진짜 궁합을 찾습니다.</div>
-          </div>
-        </div>
-        <div class="mi-feat fu d3">
-          <div class="mi-feat-ico"><i class="ti ti-message-dots"></i></div>
-          <div>
-            <div class="mi-feat-title">AI 대화 코치 & 데이트 추천</div>
-            <div class="mi-feat-desc">첫 대화 멘트부터 데이트 코스까지 AI가 함께 준비해드립니다. 어색함 없이 자연스러운 만남을 만들어드려요.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="fu d2">
-      <div class="mi-card">
-        <div class="mi-card-header">
-          <div class="mi-av">🤖</div>
-          <div>
-            <div class="mi-name">WENZI AI 매니저</div>
-            <div class="mi-role">전담 커플매니저</div>
-          </div>
-          <div class="mi-status"><span class="mi-status-dot"></span>온라인</div>
-        </div>
-        <div class="mi-chat">
-          <div class="mi-bubble ai">
-            안녕하세요! 오늘 회원님과 가치관이 93% 일치하는 분을 찾았어요. <strong>서울 강남에 계신 29세 마케터</strong>분인데, 여행과 카페를 좋아하신대요 ☕
-          </div>
-          <div class="mi-bubble user">오, 정말요? 자세히 알고 싶어요!</div>
-          <div class="mi-bubble ai">
-            두 분 모두 <strong>조용한 주말</strong>을 선호하고 <strong>깊은 대화</strong>를 중요하게 생각하세요. 제가 볼 때 첫 만남으로 성수동 브런치를 추천드려요! 🌿
-          </div>
-          <div class="mi-actions">
-            <div class="mi-chip">프로필 확인하기</div>
-            <div class="mi-chip">소개팅 수락</div>
-            <div class="mi-chip">다음 추천 보기</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 
 <!-- ══════════════════════════════════
@@ -1492,7 +1434,6 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
         <div class="f-col-t">서비스</div>
         <div class="f-links">
           <a class="f-lk" href="#process">이용방법</a>
-          <a class="f-lk" href="#manager">AI 커플매니저</a>
           <a class="f-lk" href="#coupon">소개팅 신청권</a>
           <a class="f-lk" href="#apply">소개팅 신청</a>
         </div>
