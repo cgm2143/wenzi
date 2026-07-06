@@ -696,6 +696,50 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
   .process-grid{grid-template-columns:1fr;}
   .review-stats{grid-template-columns:1fr;}
 }
+
+/* ── 통합 섹션 압축 스타일 ── */
+.pf-item {
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center; position:relative; z-index:1; padding:0 6px;
+}
+.pf-circle {
+  width:48px; height:48px; border-radius:50%; font-size:18px;
+  background:#fff; border:2px solid var(--blush);
+  box-shadow:0 0 0 5px #fff, 0 4px 14px rgba(255,92,116,.1);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:10px; position:relative;
+}
+.pf-num {
+  position:absolute; top:-5px; right:-3px;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--rose); color:#fff;
+  font-size:8px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+}
+.pf-title { font-size:12px; font-weight:700; color:var(--ink); margin-bottom:3px; }
+.pf-sub { font-size:10px; color:var(--rose); font-weight:600; }
+
+.cert-mini {
+  background:#fff; border-radius:14px; padding:18px 14px;
+  border:1px solid var(--ink-5); text-align:center;
+  transition:all .2s var(--ease);
+}
+.cert-mini:hover { border-color:var(--blush); transform:translateY(-3px); box-shadow:0 6px 20px rgba(255,92,116,.08); }
+.cert-mini-ico {
+  width:40px; height:40px; border-radius:10px; margin:0 auto 10px;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+}
+.cert-mini-pts { font-size:18px; font-weight:800; color:var(--rose); letter-spacing:-.5px; margin-bottom:4px; }
+.cert-mini-title { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+.cert-mini-desc { font-size:11px; color:var(--ink-4); font-weight:300; }
+
+@media(max-width:768px){
+  .proc-flow { grid-template-columns:repeat(3,1fr) !important; }
+  .cert-mini { padding:14px 10px; }
+}
+@media(max-width:480px){
+  .proc-flow { grid-template-columns:1fr 1fr !important; }
+}
 </style>
 </head>
 <body>
