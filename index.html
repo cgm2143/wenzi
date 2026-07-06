@@ -176,6 +176,10 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
   transition:all .15s; cursor:pointer;
 }
 .btn-outline:hover { border-color:var(--rose); color:var(--rose); }
+.hero-bottom {
+  text-align:center; padding:0 32px 60px;
+  position:relative; z-index:2; width:100%;
+}
 .hero-proof {
   display:flex; align-items:center; justify-content:center; gap:6px;
   margin-bottom:24px;
@@ -777,23 +781,6 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
     <p class="hero-sub">
       바쁜 일상 속에서도 부담 없이,<br>좋은 사람과의 만남을 자연스럽게 이어가세요.
     </p>
-    <div class="hero-btns">
-      <a href="#apply" class="btn-main">
-        <i class="ti ti-heart"></i> 소개팅 신청하기
-      </a>
-      <a href="#process" class="btn-outline">
-        이용방법 보기 <i class="ti ti-arrow-down"></i>
-      </a>
-    </div>
-    <div class="hero-proof">
-      <div class="hp-stars">
-        <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
-        <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
-        <i class="ti ti-star-filled"></i>
-      </div>
-      <span style="width:8px"></span>
-      <p class="hp-txt"><strong>8,400쌍 이상</strong>의 커플이 WENZI를 통해 만났습니다.</p>
-    </div>
   </div>
 
   <!-- 캐릭터 + 양쪽 카드 (통합 래퍼) -->
@@ -908,6 +895,26 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 
   </div>
 
+  <!-- 버튼 + 소셜 프루프 (캐릭터 아래) -->
+  <div class="hero-bottom fu d3">
+    <div class="hero-btns">
+      <a href="#apply" class="btn-main">
+        <i class="ti ti-heart"></i> 소개팅 신청하기
+      </a>
+      <a href="#process" class="btn-outline">
+        이용방법 보기 <i class="ti ti-arrow-down"></i>
+      </a>
+    </div>
+    <div class="hero-proof">
+      <div class="hp-stars">
+        <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
+        <i class="ti ti-star-filled"></i><i class="ti ti-star-filled"></i>
+        <i class="ti ti-star-filled"></i>
+      </div>
+      <span style="width:8px"></span>
+      <p class="hp-txt"><strong>8,400쌍 이상</strong>의 커플이 WENZI를 통해 만났습니다.</p>
+    </div>
+  </div>
 
 </section>
 
