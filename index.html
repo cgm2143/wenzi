@@ -110,8 +110,9 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
   min-height:auto;
   background:linear-gradient(180deg,#FFFCFB 0%,#FFF5F0 50%,#FFF0EC 100%);
   position:relative; overflow:hidden;
-  padding:100px 32px 48px;
+  padding:100px 32px 40px;
   display:flex; flex-direction:column; align-items:center;
+  gap:0;
 }
 .hero-bg {
   position:absolute; inset:0; pointer-events:none; overflow:hidden;
@@ -131,7 +132,7 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
   width:100%; max-width:1100px;
   position:relative; z-index:2;
   margin-bottom:0;
-  height:380px; /* 카드 absolute 배치용 고정 높이 */
+  height:360px;
   display:flex; align-items:center; justify-content:center;
 }
 .hero-couple-img {
@@ -153,21 +154,22 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 }
 
 /* 왼쪽 안쪽 — 캐릭터 바로 왼쪽 위 */
-.card-l1 { width:190px; left:calc(50% - 360px); top:20px; animation:cardF 6s ease-in-out infinite 0s; }
+.card-l1 { width:190px; left:calc(50% - 350px); top:30px; animation:cardF 6s ease-in-out infinite 0s; }
 /* 왼쪽 안쪽 — 캐릭터 바로 왼쪽 아래 */
-.card-l2 { width:175px; left:calc(50% - 340px); bottom:30px; animation:cardF 5s ease-in-out infinite .8s; }
+.card-l2 { width:175px; left:calc(50% - 330px); bottom:20px; animation:cardF 5s ease-in-out infinite .8s; }
 /* 왼쪽 바깥 — 맨 왼쪽 중간 */
-.card-l3 { width:185px; left:0; top:50%; transform:translateY(-50%); animation:cardF 7s ease-in-out infinite 1.6s; }
+.card-l3 { width:175px; left:2%; top:50%; transform:translateY(-50%); animation:cardF 7s ease-in-out infinite 1.6s; }
 
 /* 오른쪽 안쪽 — 캐릭터 바로 오른쪽 위 */
-.card-r1 { width:190px; right:calc(50% - 360px); top:20px; animation:cardF 6s ease-in-out infinite .4s; }
+.card-r1 { width:190px; right:calc(50% - 350px); top:30px; animation:cardF 6s ease-in-out infinite .4s; }
 /* 오른쪽 안쪽 — 캐릭터 바로 오른쪽 아래 */
-.card-r2 { width:175px; right:calc(50% - 340px); bottom:30px; animation:cardF 5s ease-in-out infinite 1.2s; }
+.card-r2 { width:175px; right:calc(50% - 330px); bottom:20px; animation:cardF 5s ease-in-out infinite 1.2s; }
 /* 오른쪽 바깥 — 맨 오른쪽 중간 */
-.card-r3 { width:185px; right:0; top:50%; transform:translateY(-50%); animation:cardF 7s ease-in-out infinite 2s; }
+.card-r3 { width:175px; right:2%; top:50%; transform:translateY(-50%); animation:cardF 7s ease-in-out infinite 2s; }
 
 @keyframes cardF{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-.card-l3, .card-r3 { animation:cardFM 7s ease-in-out infinite; }
+.card-l3 { animation:cardFM 7s ease-in-out infinite 1.6s; }
+.card-r3 { animation:cardFM 7s ease-in-out infinite 2s; }
 @keyframes cardFM{0%,100%{transform:translateY(-50%);}50%{transform:translateY(calc(-50% - 8px));}}
 
 /* 왼쪽/오른쪽 카드 컨테이너 숨김 — absolute로 교체 */
@@ -194,7 +196,7 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 .hero-top {
   width:100%; max-width:660px; text-align:center;
   position:relative; z-index:2;
-  margin-top:4px; margin-bottom:0;
+  margin-top:0; margin-bottom:24px;
 }
 .hero-h1 {
   font-weight:900; letter-spacing:-1px;
@@ -214,12 +216,12 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
   margin-bottom:0; max-width:520px; margin-left:auto; margin-right:auto;
 }
 .hero-bottom {
-  text-align:center; padding:16px 32px 0;
+  text-align:center; padding:8px 32px 0;
   position:relative; z-index:2; width:100%;
 }
 .hero-btns {
   display:flex; gap:12px; flex-wrap:wrap;
-  justify-content:center; margin-bottom:20px;
+  justify-content:center; margin-bottom:14px;
 }
 .btn-main {
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -735,7 +737,18 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
 <section class="hero">
   <div class="hero-bg"></div>
 
-  <!-- 1. 캐릭터 + 양쪽 카드 (최상단) -->
+  <!-- 2. 텍스트 (캐릭터 바로 아래) -->
+  <div class="hero-top fu d1">
+    <h1 class="hero-h1">
+      <span class="line1">퇴근 후에도 새로운<br>인연은 시작될 수 있습니다.</span>
+      <em>직장인을 위한 편안한 소개팅, WENZI에서 만나보세요.</em>
+    </h1>
+    <p class="hero-sub">
+      바쁜 일상 속에서도 부담 없이, 좋은 사람과의 만남을 자연스럽게 이어가세요.
+    </p>
+  </div>
+
+  <!-- 1. 캐릭터 + 양쪽 카드 -->
   <div class="hero-couple-wrap fu">
 
     <!-- 왼쪽 안쪽 위: AI 매니저 -->
@@ -841,17 +854,6 @@ button { font-family:var(--sans); cursor:pointer; border:none; }
         <div style="margin-left:auto;font-size:12px;font-weight:800;color:var(--rose);">97%</div>
       </div>
     </div>
-  </div>
-
-  <!-- 2. 텍스트 (캐릭터 바로 아래) -->
-  <div class="hero-top fu d1">
-    <h1 class="hero-h1">
-      <span class="line1">퇴근 후에도 새로운<br>인연은 시작될 수 있습니다.</span>
-      <em>직장인을 위한 편안한 소개팅, WENZI에서 만나보세요.</em>
-    </h1>
-    <p class="hero-sub">
-      바쁜 일상 속에서도 부담 없이, 좋은 사람과의 만남을 자연스럽게 이어가세요.
-    </p>
   </div>
 
   <!-- 3. 버튼 + 소셜 프루프 (맨 아래) -->
